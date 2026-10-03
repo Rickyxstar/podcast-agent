@@ -6,20 +6,40 @@ package storage
 import (
 	"context"
 	"errors"
+	"fmt"
 	"io"
+	"io/fs"
+	"strings"
 	"time"
 )
 
-// ErrNotFound is returned, wrapped, by Get and Stat when key doesn't exist.
-// Check it with errors.Is.
-var ErrNotFound = errors.New("object not found")
+var (
+	// ErrNotFound is returned, wrapped, by Get and Stat when key doesn't
+	// exist. Check it with errors.Is.
+	ErrNotFound = errors.New("object not found")
+	// ErrInvalidKey is returned, wrapped, for a key that breaks the rules on
+	// Provider.
+	ErrInvalidKey = errors.New("invalid storage key")
+)
+
+// CheckKey returns an error wrapping ErrInvalidKey unless key is a valid
+// Provider key.
+func CheckKey(key string) error {
+	// fs.ValidPath rejects "", leading and trailing slashes, and "." or ".."
+	// elements. Backslashes would be separators on Windows.
+	if key == "." || !fs.ValidPath(key) || strings.Contains(key, `\`) {
+		return fmt.Errorf("%q: %w", key, ErrInvalidKey)
+	}
+	return nil
+}
 
 // Provider is an object store addressed by key.
 //
 // Keys are slash-separated paths relative to the provider's root, such as
-// "incoming/ep001.json" or "results/ep001/report.json". They never start
-// with a slash, on every platform; local disk maps them onto its directory
-// and S3 uses them as object keys under its bucket.
+// "incoming/ep001.json" or "results/ep001/report.json", on every platform.
+// They have no leading or trailing slash, no empty, "." or ".." elements and
+// no backslashes; see CheckKey. Local disk maps them onto its directory and
+// S3 uses them as object keys in its bucket.
 //
 //mockery:generate: true
 //mockery:filename: mock/mock.go
