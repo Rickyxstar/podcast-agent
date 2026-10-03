@@ -1,0 +1,107 @@
+{
+  "episode_id": "ep003",
+  "title": "Bootstrapping vs Fundraising \u2014 Which Path Wins?",
+  "host": "Lena Torres",
+  "guests": [
+    "Samir Gupta",
+    "Emily Rogers"
+  ],
+  "transcript": [
+    {
+      "timestamp": "00:00",
+      "speaker": "Lena",
+      "section": "Introduction",
+      "text": "Welcome to Founder Debates. I\u2019m Lena Torres. Today we\u2019re talking bootstrapping versus venture capital. Which path gives founders the edge?"
+    },
+    {
+      "timestamp": "00:20",
+      "speaker": "Samir",
+      "section": "Introduction",
+      "text": "Hi everyone. Excited to share my experiences bootstrapping companies from scratch."
+    },
+    {
+      "timestamp": "00:30",
+      "speaker": "Emily",
+      "section": "Introduction",
+      "text": "Hey! I\u2019ve raised multiple funding rounds, so we\u2019ll debate both perspectives."
+    },
+    {
+      "timestamp": "00:50",
+      "speaker": "Lena",
+      "section": "Deep Dive",
+      "text": "Samir, tell us why bootstrapping is still relevant today."
+    },
+    {
+      "timestamp": "01:05",
+      "speaker": "Samir",
+      "section": "Deep Dive",
+      "text": "Bootstrapping forces discipline. You focus on revenue and profitability early. No distractions from chasing VC metrics."
+    },
+    {
+      "timestamp": "01:30",
+      "speaker": "Emily",
+      "section": "Deep Dive",
+      "text": "True, but if your market is time-sensitive, VC money helps capture it before competitors."
+    },
+    {
+      "timestamp": "02:00",
+      "speaker": "Lena",
+      "section": "Examples",
+      "text": "Give concrete examples?"
+    },
+    {
+      "timestamp": "02:10",
+      "speaker": "Samir",
+      "section": "Examples",
+      "text": "I built a SaaS with no outside capital; we reached break-even in 18 months. We had total control."
+    },
+    {
+      "timestamp": "02:35",
+      "speaker": "Emily",
+      "section": "Examples",
+      "text": "Meanwhile, a fintech startup I advised raised seed to scale quickly and secured market leadership within two years."
+    },
+    {
+      "timestamp": "03:00",
+      "speaker": "Lena",
+      "section": "Framework",
+      "text": "So, how should founders decide?"
+    },
+    {
+      "timestamp": "03:15",
+      "speaker": "Samir",
+      "section": "Framework",
+      "text": "If your market is niche, defensible, and revenue-generating early, bootstrap."
+    },
+    {
+      "timestamp": "03:40",
+      "speaker": "Emily",
+      "section": "Framework",
+      "text": "If it\u2019s a fast-moving, competitive space and you need talent or product scale fast, raise."
+    },
+    {
+      "timestamp": "04:10",
+      "speaker": "Lena",
+      "section": "Pros & Cons",
+      "text": "Interesting. And trade-offs?"
+    },
+    {
+      "timestamp": "04:25",
+      "speaker": "Samir",
+      "section": "Pros & Cons",
+      "text": "Bootstrapping: slower growth, full control, less risk from investors."
+    },
+    {
+      "timestamp": "04:40",
+      "speaker": "Emily",
+      "section": "Pros & Cons",
+      "text": "VC: faster growth, resources, but you dilute control and may face pressure for quick exits."
+    },
+    {
+      "timestamp": "05:10",
+      "speaker": "Lena",
+      "section": "Closing",
+      "text": "Thanks both. It seems the best path depends heavily on market type and founder priorities."
+    }
+  ]
+}

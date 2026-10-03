@@ -1,0 +1,107 @@
+{
+  "episode_id": "ep002",
+  "title": "AI in Healthcare: Hype or Reality?",
+  "host": "David Chen",
+  "guests": [
+    "Dr. Priya Patel",
+    "Alex Moore"
+  ],
+  "transcript": [
+    {
+      "timestamp": "00:00",
+      "speaker": "David",
+      "section": "Introduction",
+      "text": "Hello everyone, and welcome to Tech Health Today. I\u2019m David Chen. AI is everywhere, but in healthcare it\u2019s complicated. Today, we\u2019ll separate hype from reality."
+    },
+    {
+      "timestamp": "00:15",
+      "speaker": "Dr. Priya",
+      "section": "Introduction",
+      "text": "Hi David. Excited to discuss the real applications and limitations."
+    },
+    {
+      "timestamp": "00:25",
+      "speaker": "Alex",
+      "section": "Introduction",
+      "text": "Hey everyone. Let\u2019s be practical and look at use cases that are live today."
+    },
+    {
+      "timestamp": "00:40",
+      "speaker": "David",
+      "section": "Deep Dive",
+      "text": "Priya, diagnostics and triage assistants have been touted as the next big thing. Are they actually in use?"
+    },
+    {
+      "timestamp": "00:55",
+      "speaker": "Dr. Priya",
+      "section": "Deep Dive",
+      "text": "Yes. Some hospitals use AI for reading X-rays or flagging urgent cases. But it\u2019s assistive, not replacing clinicians."
+    },
+    {
+      "timestamp": "01:15",
+      "speaker": "Alex",
+      "section": "Deep Dive",
+      "text": "And the regulatory barriers are huge. The FDA reviews these systems carefully, so full autonomy isn\u2019t happening anytime soon."
+    },
+    {
+      "timestamp": "01:35",
+      "speaker": "David",
+      "section": "Examples",
+      "text": "So what\u2019s a concrete example of something patients might see?"
+    },
+    {
+      "timestamp": "01:50",
+      "speaker": "Dr. Priya",
+      "section": "Examples",
+      "text": "Smart triage chatbots on hospital websites or apps, helping patients figure out next steps before seeing a doctor."
+    },
+    {
+      "timestamp": "02:20",
+      "speaker": "Alex",
+      "section": "Challenges",
+      "text": "Data privacy and bias are major hurdles. AI learns from existing clinical data, which may be skewed."
+    },
+    {
+      "timestamp": "02:50",
+      "speaker": "David",
+      "section": "Trends",
+      "text": "And yet, AI adoption continues. Why?"
+    },
+    {
+      "timestamp": "03:05",
+      "speaker": "Dr. Priya",
+      "section": "Trends",
+      "text": "Efficiency and clinician support. Hospitals want faster reads and fewer errors."
+    },
+    {
+      "timestamp": "03:30",
+      "speaker": "Alex",
+      "section": "Trends",
+      "text": "Plus, the pandemic accelerated digital health adoption, including AI tools."
+    },
+    {
+      "timestamp": "04:00",
+      "speaker": "David",
+      "section": "Future",
+      "text": "So what\u2019s next? Are we talking predictive diagnostics?"
+    },
+    {
+      "timestamp": "04:15",
+      "speaker": "Dr. Priya",
+      "section": "Future",
+      "text": "Yes, AI copilots that suggest treatment plans, but a human will always make the final call."
+    },
+    {
+      "timestamp": "04:40",
+      "speaker": "Alex",
+      "section": "Future",
+      "text": "Interoperability is key. AI will work best when systems talk to each other securely."
+    },
+    {
+      "timestamp": "05:10",
+      "speaker": "David",
+      "section": "Closing",
+      "text": "Thanks, Priya and Alex. And thanks to our listeners. AI is powerful, but cautious optimism is the way forward."
+    }
+  ]
+}
