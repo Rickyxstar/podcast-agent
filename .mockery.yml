@@ -1,0 +1,5 @@
+all: false
+packages:
+  github.com/Rickyxstar/podcast-agent:
+    config:
+      recursive: true

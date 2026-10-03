@@ -15,6 +15,9 @@ import (
 // tool loop the caller appends the returned assistant Message to the history,
 // runs the requested ToolCalls, appends a user Message carrying the
 // ToolResults, and calls Chat again.
+//
+//mockery:generate: true
+//mockery:filename: mock/mock.go
 type Provider interface {
 	// Name identifies the provider in logs and reports, e.g. "anthropic".
 	Name() string
