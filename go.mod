@@ -2,7 +2,10 @@ module github.com/Rickyxstar/podcast-agent
 
 go 1.27.1
 
-require github.com/anthropics/anthropic-sdk-go v1.78.0
+require (
+	github.com/anthropics/anthropic-sdk-go v1.78.0
+	github.com/stretchr/testify v1.12.1
+)
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.38.0 // indirect
@@ -25,7 +28,6 @@ require (
 	github.com/pb33f/ordered-map/v2 v2.3.1 // indirect
 	github.com/standard-webhooks/standard-webhooks/libraries v0.0.1 // indirect
 	github.com/stretchr/objx v0.5.3 // indirect
-	github.com/stretchr/testify v1.12.1 // indirect
 	github.com/tidwall/gjson v1.18.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
