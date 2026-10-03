@@ -1,0 +1,119 @@
+{
+  "episode": {
+    "id": "ep001",
+    "title": "The Future of Remote Work",
+    "host": "Sarah Chen",
+    "guests": [
+      "Mark Rivera"
+    ],
+    "duration": "06:00"
+  },
+  "summary": "Sarah and Mark discuss how remote work changed after 2020 & what async-first teams do differently.",
+  "takeaways": [
+    "Async-first teams write things down by default.",
+    "Handbooks replace hallway conversations.",
+    "Meetings are for decisions, not status.",
+    "Time zones become a feature when work is documented.",
+    "Remote work needs explicit\nonboarding."
+  ],
+  "quotes": [
+    {
+      "text": "If it isn't written down, it didn't happen.",
+      "speaker": "Mark Rivera",
+      "timestamp": "04:10",
+      "verified": true
+    },
+    {
+      "text": "Offices were never about productivity.",
+      "speaker": "Sarah Chen",
+      "timestamp": "05:02",
+      "verified": false
+    }
+  ],
+  "topics": [
+    "remote-work",
+    "async-culture"
+  ],
+  "fact_check": {
+    "status": "completed",
+    "claims": [
+      {
+        "id": "c1",
+        "claim": "GitLab, Automattic and Doist all publish | public handbooks.",
+        "speaker": "Mark Rivera",
+        "timestamp": "01:20",
+        "type": "factual",
+        "verdict": "verified",
+        "confidence": 0.88,
+        "evidence": [
+          {
+            "source": "kb:gitlab-handbook",
+            "snippet": "The GitLab handbook is public.",
+            "url": "https://handbook.gitlab.com/(about)",
+            "date": "2025-06-01"
+          },
+          {
+            "source": "kb:doist-guide",
+            "snippet": "Doist documents its async culture."
+          }
+        ],
+        "reasoning": "Both KB entries confirm public handbooks."
+      },
+      {
+        "id": "c2",
+        "claim": "Half of all companies will be fully remote by 2030.",
+        "speaker": "Sarah Chen",
+        "timestamp": "03:45",
+        "type": "prediction",
+        "verdict": "unverifiable",
+        "confidence": 0.4,
+        "evidence": [],
+        "reasoning": "Predictions can't be checked."
+      },
+      {
+        "id": "c3",
+        "claim": "Remote work is better for everyone.",
+        "speaker": "Mark Rivera",
+        "timestamp": "04:30",
+        "type": "opinion",
+        "verdict": "unverifiable",
+        "confidence": 0.4,
+        "evidence": [],
+        "reasoning": ""
+      },
+      {
+        "id": "c4",
+        "claim": "Zoom had 10 million daily users in 2024.",
+        "speaker": "Sarah Chen",
+        "timestamp": "02:00",
+        "type": "factual",
+        "verdict": "outdated_or_inaccurate",
+        "confidence": 0.715,
+        "evidence": [
+          {
+            "source": "kb:zoom-stats",
+            "snippet": "300 million daily meeting participants.",
+            "date": "2024-01-10"
+          }
+        ],
+        "reasoning": ""
+      }
+    ]
+  },
+  "run": {
+    "provider": "anthropic",
+    "model": "claude-opus-5-5",
+    "tokens": {
+      "input": 12000,
+      "output": 3400,
+      "cache_read": 8000,
+      "cache_write": 0
+    },
+    "cost_usd": 0.42,
+    "duration_ms": 18250,
+    "trace_id": "tr-123",
+    "warnings": [
+      "quote q2 not found verbatim in transcript"
+    ]
+  }
+}
