@@ -7,11 +7,13 @@ import (
 	"io"
 	"log/slog"
 	"strings"
-	"sync"
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/mock"
+
 	"github.com/Rickyxstar/podcast-agent/internal/llm"
+	llmmock "github.com/Rickyxstar/podcast-agent/internal/llm/mock"
 	"github.com/Rickyxstar/podcast-agent/internal/report"
 	"github.com/Rickyxstar/podcast-agent/internal/search"
 	"github.com/Rickyxstar/podcast-agent/internal/search/kb"
@@ -32,50 +34,39 @@ var testEpisode = &transcript.Episode{
 	},
 }
 
-// scriptedLLM answers each stage from a function. The summary and plan calls
-// run concurrently, so calls are counted under a lock.
-type scriptedLLM struct {
-	mu    sync.Mutex
-	loops int // fact-check loop calls so far
-	// summary, plan and loop return the response text or tool calls for
-	// their stage; loop gets the 1-based call number.
-	summary func() (string, error)
-	plan    func() (string, error)
-	loop    func(n int, req llm.ChatRequest) []llm.ToolCall
+// Matchers for the three model stages. The summary and plan calls run
+// concurrently, so expectations match on the request rather than call order.
+var (
+	summaryReq = mock.MatchedBy(func(r llm.ChatRequest) bool { return r.System == summarySystem })
+	planReq    = mock.MatchedBy(func(r llm.ChatRequest) bool { return r.System != summarySystem && len(r.Tools) == 0 })
+	loopReq    = mock.MatchedBy(func(r llm.ChatRequest) bool { return r.System != summarySystem && len(r.Tools) > 0 })
+)
+
+func newMockLLM(t *testing.T) *llmmock.MockProvider {
+	p := llmmock.NewMockProvider(t)
+	p.EXPECT().Name().Return("mock").Maybe()
+	return p
 }
 
-func (s *scriptedLLM) Name() string { return "scripted" }
-
-func (s *scriptedLLM) Chat(_ context.Context, req llm.ChatRequest) (*llm.ChatResponse, error) {
-	resp := &llm.ChatResponse{
+// reply returns a final text response; toolUse returns one that calls tools.
+func reply(text string) *llm.ChatResponse {
+	return &llm.ChatResponse{
 		Model:      "test-model",
 		StopReason: llm.StopEndTurn,
 		Usage:      llm.Usage{InputTokens: 100, OutputTokens: 10},
-		Message:    llm.Message{Role: llm.RoleAssistant},
+		Message:    llm.Message{Role: llm.RoleAssistant, Text: text},
 	}
-	var err error
-	switch {
-	case req.System == summarySystem:
-		resp.Message.Text, err = s.summary()
-	case len(req.Tools) == 0:
-		resp.Message.Text, err = s.plan()
-	default:
-		s.mu.Lock()
-		s.loops++
-		n := s.loops
-		s.mu.Unlock()
-		if calls := s.loop(n, req); len(calls) > 0 {
-			resp.Message.ToolCalls = calls
-			resp.StopReason = llm.StopToolUse
-		}
-	}
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
 }
 
-func goodNotes() (string, error) {
+func toolUse(calls ...llm.ToolCall) *llm.ChatResponse {
+	resp := reply("")
+	resp.StopReason = llm.StopToolUse
+	resp.Message.ToolCalls = calls
+	return resp
+}
+
+func goodNotes(t *testing.T) string {
+	t.Helper()
 	n := notes{
 		Summary:   strings.Repeat("word ", 250),
 		Takeaways: []string{"a", "b", "c", "d", "e"},
@@ -88,15 +79,16 @@ func goodNotes() (string, error) {
 		Topics: []string{"remote-work", "Async Culture"},
 	}
 	b, err := json.Marshal(n)
-	return string(b), err
+	if err != nil {
+		t.Fatal(err)
+	}
+	return string(b)
 }
 
-func goodPlan() (string, error) {
-	return `{"claims": [
+const goodPlan = `{"claims": [
 		{"claim": "GitLab has been all-remote since its founding", "speaker": "Mark", "timestamp": "01:20", "type": "factual", "strategy": "search kb for GitLab remote"},
 		{"claim": "Reached break-even in 18 months", "speaker": "Mark", "timestamp": "02:10", "type": "anecdote", "strategy": "none"}
-	]}`, nil
-}
+	]}`
 
 func call(id, name, input string) llm.ToolCall {
 	return llm.ToolCall{ID: id, Name: name, Input: json.RawMessage(input)}
@@ -120,31 +112,27 @@ func newTestAgent(t *testing.T, p llm.Provider, cfg Config) *Agent {
 }
 
 func TestRun(t *testing.T) {
-	p := &scriptedLLM{
-		summary: goodNotes,
-		plan:    goodPlan,
-		loop: func(n int, req llm.ChatRequest) []llm.ToolCall {
-			switch n {
-			case 1:
-				return []llm.ToolCall{call("t1", "search_kb", `{"query": "GitLab all-remote founding"}`)}
-			case 2:
-				// The first verdict cites a made-up result and is rejected;
-				// the model is expected to retry.
-				return []llm.ToolCall{call("t2", "submit_verdict", `{"claim_id": "c1", "verdict": "verified",
-					"evidence": [{"result_id": "invented", "stance": "supports"}], "reasoning": "x", "self_rating": 0.8}`)}
-			case 3:
-				last := req.Messages[len(req.Messages)-1]
-				if len(last.ToolResults) != 1 || !last.ToolResults[0].IsError {
-					t.Errorf("want an error result for the invented evidence, got %+v", last.ToolResults)
-				}
-				return []llm.ToolCall{call("t3", "submit_verdict", `{"claim_id": "c1", "verdict": "verified",
-					"evidence": [{"result_id": "gitlab-all-remote", "stance": "supports"}],
-					"reasoning": "The GitLab Handbook says so.", "self_rating": 0.8}`)}
+	p := newMockLLM(t)
+	p.EXPECT().Chat(mock.Anything, summaryReq).Return(reply(goodNotes(t)), nil).Once()
+	p.EXPECT().Chat(mock.Anything, planReq).Return(reply(goodPlan), nil).Once()
+	// Loop expectations are consumed in order.
+	p.EXPECT().Chat(mock.Anything, loopReq).
+		Return(toolUse(call("t1", "search_kb", `{"query": "GitLab all-remote founding"}`)), nil).Once()
+	// The first verdict cites a made-up result and is rejected; the model is
+	// expected to retry.
+	p.EXPECT().Chat(mock.Anything, loopReq).
+		Return(toolUse(call("t2", "submit_verdict", `{"claim_id": "c1", "verdict": "verified",
+			"evidence": [{"result_id": "invented", "stance": "supports"}], "reasoning": "x", "self_rating": 0.8}`)), nil).Once()
+	p.EXPECT().Chat(mock.Anything, loopReq).
+		Run(func(_ context.Context, req llm.ChatRequest) {
+			last := req.Messages[len(req.Messages)-1]
+			if len(last.ToolResults) != 1 || !last.ToolResults[0].IsError {
+				t.Errorf("want an error result for the invented evidence, got %+v", last.ToolResults)
 			}
-			t.Errorf("unexpected loop call %d", n)
-			return nil
-		},
-	}
+		}).
+		Return(toolUse(call("t3", "submit_verdict", `{"claim_id": "c1", "verdict": "verified",
+			"evidence": [{"result_id": "gitlab-all-remote", "stance": "supports"}],
+			"reasoning": "The GitLab Handbook says so.", "self_rating": 0.8}`)), nil).Once()
 	rep, err := newTestAgent(t, p, Config{}).Run(context.Background(), testEpisode)
 	if err != nil {
 		t.Fatal(err)
@@ -186,7 +174,7 @@ func TestRun(t *testing.T) {
 	if rep.Run.Tokens.Input != 500 || rep.Run.Tokens.Output != 50 {
 		t.Errorf("tokens = %+v, want 500 in / 50 out", rep.Run.Tokens)
 	}
-	if rep.Run.Provider != "scripted" || rep.Run.Model != "test-model" || rep.Run.TraceID == "" {
+	if rep.Run.Provider != "mock" || rep.Run.Model != "test-model" || rep.Run.TraceID == "" {
 		t.Errorf("run = %+v", rep.Run)
 	}
 	wantWarnings := []string{"quote not found", `topic "Async Culture"`}
@@ -198,19 +186,14 @@ func TestRun(t *testing.T) {
 }
 
 func TestRunLoopCap(t *testing.T) {
-	p := &scriptedLLM{
-		summary: goodNotes,
-		plan:    goodPlan,
-		loop: func(int, llm.ChatRequest) []llm.ToolCall {
-			return []llm.ToolCall{call("t", "get_current_date", `{}`)}
-		},
-	}
+	p := newMockLLM(t)
+	p.EXPECT().Chat(mock.Anything, summaryReq).Return(reply(goodNotes(t)), nil).Once()
+	p.EXPECT().Chat(mock.Anything, planReq).Return(reply(goodPlan), nil).Once()
+	p.EXPECT().Chat(mock.Anything, loopReq).
+		Return(toolUse(call("t", "get_current_date", `{}`)), nil).Times(3)
 	rep, err := newTestAgent(t, p, Config{MaxIterations: 3}).Run(context.Background(), testEpisode)
 	if err != nil {
 		t.Fatal(err)
-	}
-	if p.loops != 3 {
-		t.Errorf("loop calls = %d, want 3", p.loops)
 	}
 	c1 := rep.FactCheck.Claims[0]
 	if c1.Verdict != report.VerdictUnverifiable || !strings.HasPrefix(c1.Reasoning, "budget_exhausted") {
@@ -222,10 +205,9 @@ func TestRunLoopCap(t *testing.T) {
 }
 
 func TestRunFactCheckFailureKeepsSummary(t *testing.T) {
-	p := &scriptedLLM{
-		summary: goodNotes,
-		plan:    func() (string, error) { return "", errors.New("boom") },
-	}
+	p := newMockLLM(t)
+	p.EXPECT().Chat(mock.Anything, summaryReq).Return(reply(goodNotes(t)), nil).Once()
+	p.EXPECT().Chat(mock.Anything, planReq).Return(nil, errors.New("boom")).Once()
 	rep, err := newTestAgent(t, p, Config{}).Run(context.Background(), testEpisode)
 	if err != nil {
 		t.Fatal(err)
@@ -239,10 +221,9 @@ func TestRunFactCheckFailureKeepsSummary(t *testing.T) {
 }
 
 func TestRunSummaryFailure(t *testing.T) {
-	p := &scriptedLLM{
-		summary: func() (string, error) { return "", errors.New("boom") },
-		plan:    func() (string, error) { return `{"claims": []}`, nil },
-	}
+	p := newMockLLM(t)
+	p.EXPECT().Chat(mock.Anything, summaryReq).Return(nil, errors.New("boom")).Once()
+	p.EXPECT().Chat(mock.Anything, planReq).Return(reply(`{"claims": []}`), nil).Once()
 	if _, err := newTestAgent(t, p, Config{}).Run(context.Background(), testEpisode); err == nil {
 		t.Fatal("Run succeeded, want summary error")
 	}
