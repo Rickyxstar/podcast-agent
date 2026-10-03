@@ -1,0 +1,347 @@
+{
+  "episode": {
+    "id": "ep002",
+    "title": "AI in Healthcare: Hype or Reality?",
+    "host": "David Chen",
+    "guests": [
+      "Dr. Priya Patel",
+      "Alex Moore"
+    ],
+    "duration": "05:10"
+  },
+  "summary": "In this episode of Tech Health Today, host David Chen sits down with Dr. Priya Patel and Alex Moore to separate the hype from the reality of artificial intelligence in healthcare. The conversation focuses on practical, live use cases rather than speculation. Dr. Patel confirms that AI is already in use at some hospitals, particularly for reading X-rays and flagging urgent cases, but stresses that these tools are assistive and do not replace clinicians. Alex Moore adds that regulatory barriers are significant, noting that the FDA reviews these systems carefully, so fully autonomous AI is not coming anytime soon. For a concrete example patients might encounter, Dr. Patel points to smart triage chatbots on hospital websites and apps that help people figure out next steps before seeing a doctor. The guests also address the challenges: Moore highlights data privacy and bias as major hurdles, since AI learns from existing clinical data that may be skewed. Despite these obstacles, adoption continues. Dr. Patel attributes this to the push for efficiency and clinician support, with hospitals seeking faster reads and fewer errors, while Moore notes that the pandemic accelerated digital health adoption, including AI tools. Looking ahead, Dr. Patel anticipates AI copilots that suggest treatment plans, while emphasizing that a human will always make the final call. Moore argues that interoperability is key, as AI works best when systems communicate securely. Chen closes by framing the takeaway as cautious optimism: AI is powerful, but its role in healthcare should be approached carefully.",
+  "takeaways": [
+    "AI in healthcare today is assistive: it helps clinicians read X-rays and flag urgent cases but does not replace them.",
+    "Regulatory review, including by the FDA, means fully autonomous medical AI is not arriving anytime soon.",
+    "Smart triage chatbots on hospital websites and apps are a real example of AI that patients may already encounter.",
+    "Data privacy and bias are major hurdles because AI learns from existing clinical data that may be skewed.",
+    "AI will work best when healthcare systems are interoperable and share data securely, with humans making the final call."
+  ],
+  "quotes": [
+    {
+      "text": "Yes. Some hospitals use AI for reading X-rays or flagging urgent cases. But it’s assistive, not replacing clinicians.",
+      "speaker": "Dr. Priya",
+      "timestamp": "00:55",
+      "verified": true
+    },
+    {
+      "text": "Data privacy and bias are major hurdles. AI learns from existing clinical data, which may be skewed.",
+      "speaker": "Alex",
+      "timestamp": "02:20",
+      "verified": true
+    },
+    {
+      "text": "Yes, AI copilots that suggest treatment plans, but a human will always make the final call.",
+      "speaker": "Dr. Priya",
+      "timestamp": "04:15",
+      "verified": true
+    },
+    {
+      "text": "Interoperability is key. AI will work best when systems talk to each other securely.",
+      "speaker": "Alex",
+      "timestamp": "04:40",
+      "verified": true
+    },
+    {
+      "text": "AI is powerful, but cautious optimism is the way forward.",
+      "speaker": "David",
+      "timestamp": "05:10",
+      "verified": true
+    }
+  ],
+  "topics": [
+    "ai-in-healthcare",
+    "medical-diagnostics",
+    "healthcare-regulation",
+    "data-privacy",
+    "algorithmic-bias",
+    "digital-health",
+    "interoperability"
+  ],
+  "fact_check": {
+    "status": "completed",
+    "claims": [
+      {
+        "id": "c1",
+        "claim": "Some hospitals use AI for reading X-rays or flagging urgent cases.",
+        "speaker": "Dr. Priya Patel",
+        "timestamp": "00:55",
+        "type": "factual",
+        "verdict": "verified",
+        "confidence": 0.75,
+        "evidence": [
+          {
+            "source": "www.nature.com",
+            "snippet": "Intracranial hemorrhage (ICH) is a life-threatening emergency requiring rapid and accurate diagnosis, yet the real-world performance of FDA-cleared deep-learning models remains uncertain. … Intracranial hemorrhage (ICH) is a life-threatening emergency requiring rapid and accurate diagnosis, yet the real-world performance of FDA-cleared deep-learning models remains uncertain. We retrospectively evaluated a commercial AI model (Aidoc Medical Briefcase ICH Triage) across 101,944 non-contrast head CT examinations from 74,142 patients in a 17-facility academic health system (April 2023–April 2025). … npj Digital Medicine - Real-world performance evaluation of a commercial deep learning model for intracranial hemorrhage detection … Sensitivity was highest for acute (86.2%), large >10 mm (95.0%), and multi-compartment hemorrhages (93.6%), but substantially lower for subacute (45.5%), chronic (54.8%), small ≤10 mm (74.8%), and single-compartment bleeds (76.0%). Performance was also reduced in the outpatient setting (72.2%), where subtle hemorrhages were more common, while remaining consistent across demographic subgroups. These findings show that the model performs reliably for acute and extensive ICH but is less sensitive to subtle or localized presentations, underscoring the need for ongoing real-world evaluation and targeted improvements to support safe clinical triage. ... Discover the latest articles and news in related subjects. ... Intracranial hemorrhage (ICH), or bleeding within the brain parenchyma or associated compartments, is a major global health concern1. … Davis, M. A., Rao, B., Cedeno, P. A., Saha, A. & Zohrabian, V. M. Machine learning and improved quality metrics in acute intracranial hemorrhage by noncontrast computed tomography. Curr. Probl. Diagn. Radiol. 51, 556–561 (2022). ... Miller, D. L., Kakar, S., Jiang, L., Spelic, D. C. & Burk, L. The US Food and Drug Administration’s role in improving radiation dose management for medical X-ray imaging devices. Br. J. Radiol. 94, 20210373 (2021). ... Kau, T. et al. FDA-approved deep learning software application versus radiologists with different levels of expertise: detection of intracranial hemorrhage in a retrospective single-center study.",
+            "url": "https://www.nature.com/articles/s41746-025-02244-3",
+            "date": "2025-12-24"
+          },
+          {
+            "source": "www.sciencedirect.com",
+            "snippet": "An FDA-approved and CE-marked commercially available DL-powered triage tool for acute ICH detection and prioritization, CINA-ICH v1 (Avicenna.AI, La Ciotat, France), was utilized in this study. This application automatically processes NCCT scans and it is designed to immediately flag suspected findings, if present, alongside the corresponding secondary capture information and generate an alert notification. … AI triage reduces diagnostic delays in teleradiology workflows. ... PACS-to-assessment time reduced by 13.7 min after AI use. ... Report turnaround time decreased by 26.6 min post-AI. ... High accuracy with 97% sensitivity and 99.6% negative predictive value. ... Strong workflow gains during overnight emergency imaging. Intracranial hemorrhage (ICH) is a time-sensitive emergency requiring rapid diagnosis. … An FDA-approved and CE-marked commercially available DL-powered triage tool for acute ICH detection and prioritization, CINA-ICH v1 (Avicenna.AI, La Ciotat, France), was utilized in this study. This application automatically processes NCCT scans and it is designed to immediately flag suspected findings, if present, alongside the corresponding secondary capture information and generate an alert notification. … Intracranial hemorrhage (ICH), is a life-threatening neurological emergency and the second most common type of stroke, associated with a high mortality rate and severe functional impairment [1,2]. Each year, approximately 2 million people worldwide are affected by ICH [3]. Case-fatality rates range from 35% to 52% with nearly half of these deaths occurring within the first 24 h [4]. As the global population ages, sedentary lifestyles increase, and the use of antithrombotic therapies becomes more widespread, the incidence of ICH continues to rise, presenting a growing public health challenge [2]. … Fig. 1. Representative secondary capture outputs generated by the AI tool. (a) Positive AI output showing a suspected intracranial hemorrhage (ICH) on a non-contrast head CT, with the suspicious hyperdense region highlighted by the AI overlay.",
+            "url": "https://www.sciencedirect.com/science/article/pii/S2772528626000294",
+            "date": "2026-06-27"
+          },
+          {
+            "source": "pmc.ncbi.nlm.nih.gov",
+            "snippet": "Rapid detection of intracranial ... scans for reporting presents a challenge for radiologists. Artificial intelligence (AI) offers a solution to enable radiologists to triage urgent scans and reduce reporting errors.... … Rapid detection of intracranial haemorrhage (ICH) is crucial for assessing patients with neurological symptoms. Prioritising these urgent scans for reporting presents a challenge for radiologists. Artificial intelligence (AI) offers a solution to enable radiologists to triage urgent scans and reduce reporting errors. … Artificial intelligence (AI) decision support systems have become prolific in recent years, aiming to (1) assist in triage of urgent cases via flags and widgets, as well as insertion of secondary captures into the picture archiving and communication system (PACS) workstation and (2) act as an automated second-read quality assurance checker to avoid diagnostic misses by human radiologists4–6. Aidoc, a widely used FDA-approved commercial AI decision support system7 for the detection of ICH has been validated previously to have a sensitivity of 88.7 to 96.2% and a specificity of 92.3 to 99.0%4,7–9. … Review of deep learning algorithms for the automatic detection of intracranial hemorrhages on computed tomography head imaging. J. Neurointerv. Surg. 2021;13(4):369–378. doi: 10.1136/neurintsurg-2020-017099. [DOI] [PubMed] [Google Scholar] 7.Smith, J. Radiological computer aided triage and notification software (510(k) Number K180647), U. FDA, Editor (2018). 8.Ginat DT. Analysis of head CT scans flagged by deep learning software for acute intracranial hemorrhage. … 4.Voter AF, et al. Diagnostic accuracy and failure mode analysis of a deep learning algorithm for the detection of intracranial hemorrhage. J. Am. Coll. Radiol. 2021;18(8):1143–1152. doi: 10.1016/j.jacr.2021.03.005.",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9674833/"
+          },
+          {
+            "source": "intuitionlabs.ai",
+            "snippet": "In lung cancer screening (low-dose CT), AI algorithms can triage pulmonary nodules by likelihood-of-malignancy, assist volumetric growth tracking, or alert radiologists to small lung tumors hidden in noisy scans. Similar FDA-cleared nodule detectors and CAD tools exist. For general chest X-rays, AI is used to flag critical findings (e.g. collapsed lung, large pleural effusions) so that urgent cases can be prioritized. One arXiv study noted that autonomous reading of normal chest X-rays could dramatically reduce workload – if the FDA-approved “normal vs abnormal” thresholds are robust. … Substantive evidence shows improved efficiency and accuracy in key tasks (screening, triage, detection). Clinicians are generally optimistic, but prudent: they view AI as a powerful colleague rather than a replacement. Regulatory frameworks are adapting to ensure safety and adaptivity, and ethical debates are underway on issues of bias, privacy, and responsibility. The next few years will solidify which AI innovations truly transform care versus those that remain academic curiosities. … As of late 2025, hundreds of AI-enabled tools have received regulatory clearance for medical imaging tasks, and adoption by clinicians is growing – albeit unevenly – around the world. AI algorithms now assist radiologists in image interpretation (e.g. flagging potential cancers in mammograms or lung scans), workflow triage (prioritizing urgent cases), and even preliminary report drafting. … In lung cancer screening (low-dose CT), AI algorithms can triage pulmonary nodules by likelihood-of-malignancy, assist volumetric growth tracking, or alert radiologists to small lung tumors hidden in noisy scans. Similar FDA-cleared nodule detectors and CAD tools exist. For general chest X-rays, AI is used to flag critical findings (e.g. collapsed lung, large pleural effusions) so that urgent cases can be prioritized. One arXiv study noted that autonomous reading of normal chest X-rays could dramatically reduce workload – if the FDA-approved “normal vs abnormal” thresholds are robust. … Payment and workflow integration remain hurdles: EHR and PACS vendors are slowly adding hooks for AI tools (e.g. IHE Radiology profiles for AI output), but widespread uptake may await clearer reimbursement models for AI-aided interpretations. Currently, many institutions run AI pilots internally or participate in multi-center validation studies. ... Stroke Triage (Viz.ai): The co-founded company Viz.ai (by Dr.",
+            "url": "https://intuitionlabs.ai/articles/ai-radiology-trends-2025",
+            "date": "2025-11-06"
+          }
+        ],
+        "reasoning": "Peer-reviewed studies describe FDA-cleared AI triage tools (e.g., Aidoc, CINA-ICH) running in real hospital settings, such as a 17-facility academic health system and a multicenter emergency network, where they flag urgent findings like brain bleeds; AI is also used to flag critical chest X-ray findings."
+      },
+      {
+        "id": "c2",
+        "claim": "Clinical AI tools in diagnostics are assistive and do not replace clinicians.",
+        "speaker": "Dr. Priya Patel",
+        "timestamp": "00:55",
+        "type": "factual",
+        "verdict": "outdated_or_inaccurate",
+        "confidence": 0.59,
+        "evidence": [
+          {
+            "source": "www.digitaldiagnostics.com",
+            "snippet": "‍As an autonomous, AI-based system, LumineticsCore® (formerly known as IDx-DR) is unique in that it makes an assessment without the need for a clinician to also interpret the image or results, making it usable by health care providers who ... … IDx (now known as Digital Diagnostics), a privately-held AI diagnostics company, announced today that the U.S. Food and Drug Administration (FDA) has granted the company’s De Novo request to market LumineticsCore® (formerly known as IDx-DR), an AI-based diagnostic system for the autonomous detection of diabetic retinopathy, a leading cause of blindness. … IDx-DR is the first autonomous, AI-based diagnostic system authorized for commercialization by the FDA. ‍“The FDA’s authorization to market LumineticsCore® (formerly known as IDx-DR) is a historic moment that has the potential to launch a transformation in the way U.S. … LumineticsCore® (formerly known as IDx-DR) is the first autonomous, AI-based diagnostic system authorized for commercialization by the FDA. … ‍As an autonomous, AI-based system, LumineticsCore® (formerly known as IDx-DR) is unique in that it makes an assessment without the need for a clinician to also interpret the image or results, making it usable by health care providers who may not normally be involved in eye care.",
+            "url": "https://www.digitaldiagnostics.com/fda-permits-marketing-of-lumineticscore-formerly-known-as-idx-dr-for-automated-detection-of-diabetic-retinopathy-in-primary-care/",
+            "date": "2025-06-26"
+          },
+          {
+            "source": "www.prnewswire.com",
+            "snippet": "LumineticsCore is cleared by the FDA to make a diagnosis without the need for a clinician to also interpret the image or result, making it usable by health care providers who may not normally be involved in eye care. … LumineticsCore™ (formerly IDx-DR) is an FDA-cleared AI-based diagnostic system designed for use at the front lines of care to detect diabetic retinopathy (including macular edema), a common complication of diabetes and a leading cause of blindness. LumineticsCore is cleared by the FDA to make a diagnosis without the need for a clinician to also interpret the image or result, making it usable by health care providers who may not normally be involved in eye care. … That starts with a name that is approachable, easy to understand, and comforting, which is why IDx-DR is now LumineticsCore.\" The updated LumineticsCore branding more clearly represents Digital Diagnostics' dedication to transforming the accessibility, affordability, equity, and quality of global healthcare through the application of technology in the medical diagnosis and treatment process. The Indications for Use and autonomous AI technology behind LumineticsCore™ (formerly IDx-DR) are unchanged. … The new name, LumineticsCore, better illustrates how the system uses science, technology, and imaging to autonomously diagnose disease. \"We want our current and future product brands to be reflective of the Digital Diagnostics mission and we have thoughtfully considered how to pay tribute to the company brand in the renaming of our flagship product,\" said Jacque Engle, vice president of marketing at Digital Diagnostics. \"The product that the market has come to know as IDx-DR has not changed, however the refreshed brand name and logomark help to further tell the story of AI diagnostics, highlighting the creativity and humanity of the LumineticsCore system.\" … Digital Diagnostics – a leading AI diagnostics company on a mission to transform global healthcare – has rebranded its flagship product, the AI diagnostic system formerly known as IDx-DR, to LumineticsCore™.",
+            "url": "https://www.prnewswire.com/news-releases/digital-diagnostics-sheds-light-on-ai-tech-with-lumineticscore-product-rebrand-301782573.html",
+            "date": "2023-03-28"
+          },
+          {
+            "source": "pubmed.ncbi.nlm.nih.gov",
+            "snippet": "Device autonomy levels were distributed as follows: 52% assistive (requiring users to confirm or approve AI provided information or decision), 27% autonomous information, and 21% autonomous decision. … The U.S. Food and Drug Administration (FDA) plays an important role in ensuring safety and effectiveness of AI/ML-enabled devices through its regulatory processes. In recent years, there has been an increase in the number of these devices cleared by FDA. This study analyzes 104 FDA-approved ML-enabl … … The majority of devices used imaging data (n = 99), with CT and MRI being the most common modalities. Device autonomy levels were distributed as follows: 52% assistive (requiring users to confirm or approve AI provided information or decision), 27% autonomous information, and 21% autonomous decision. … The prevalence of assistive devices indicates a cautious approach to integrating ML into clinical decision-making, favoring support rather than replacement of human judgment. Keywords: Artificial Intelligence; device autonomy; healthcare technology; medical devices.",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/40776011/",
+            "date": "2025-08-07"
+          },
+          {
+            "source": "pmc.ncbi.nlm.nih.gov",
+            "snippet": "While efficient, the 510(k) pathway does not require independent clinical data demonstrating performance or safety.2 Ours is the first study to focus on FDA-regulated radiology devices, showing that clinical testing remains uncommon, even as device approvals accelerate. Today, most AI/ML devices are used in conjunction with a human, yet only 56 were tested with any human operator. Most have not been validated against defined clinical or performance end points. In a study of radiologists interpreting chest radiographs with AI assistance, high performers maintained strong performance, while low performers did not necessarily improve.3 Such heterogeneity in performance raises questions about clinical generalizability. … While efficient, the 510(k) pathway does not require independent clinical data demonstrating performance or safety.2 Ours is the first study to focus on FDA-regulated radiology devices, showing that clinical testing remains uncommon, even as device approvals accelerate. Today, most AI/ML devices are used in conjunction with a human, yet only 56 were tested with any human operator. Most have not been validated against defined clinical or performance end points. In a study of radiologists interpreting chest radiographs with AI assistance, high performers maintained strong performance, while low performers did not necessarily improve.3 Such heterogeneity in performance raises questions about clinical generalizability. … 3.Yu F, Moehring A, Banerjee O, Salz T, Agarwal N, Rajpurkar P. Heterogeneity and predictors of the effects of AI assistance on radiologists. Nat Med. 2024;30(3):837-849. … Artificial intelligence and machine learning (AI/ML) increasingly support clinical decision-making, particularly in radiology. The number of AI-enabled tools cleared by the US Food and Drug Administration (FDA) continues to rise. However, evidence about clinical generalizability is lacking.1 We focus on FDA-regulated AI devices in radiology, analyzing premarket submissions with emphasis on testing. … For each device, data regarding device testing, such as prospective, human-in-the-loop, and clinical testing, was collected (eMethods in Supplement 1). Inclusion and exclusion criteria are in eMethods in Supplement 1. Radiology devices were evaluated via the summary submission documents.",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12595527/"
+          }
+        ],
+        "reasoning": "Most diagnostic AI is assistive, but the claim says this of all of it, and that is false: the FDA has cleared autonomous diagnostic AI since 2018 (IDx-DR/LumineticsCore diagnoses without a clinician reading the image), and an analysis of FDA-cleared ML devices classed 21% as 'autonomous decision.'"
+      },
+      {
+        "id": "c3",
+        "claim": "The FDA reviews AI healthcare systems carefully.",
+        "speaker": "Alex Moore",
+        "timestamp": "01:15",
+        "type": "factual",
+        "verdict": "verified",
+        "confidence": 0.57,
+        "evidence": [
+          {
+            "source": "www.fda.gov",
+            "snippet": "The FDA reviews medical devices through an appropriate premarket pathway, such as premarket clearance (510(k)), De Novo classification, or premarket approval. The FDA also reviews and clears modifications to medical devices, including AI-enabled medical device software functions, that could significantly affect the safety or effectiveness of a device. … The FDA reviews medical devices through an appropriate premarket pathway, such as premarket clearance (510(k)), De Novo classification, or premarket approval. The FDA also reviews and clears modifications to medical devices, including AI-enabled medical device software functions, that could significantly affect the safety or effectiveness of a device. … Learn more about the FDA’s guidance for risk-based approach for 510(k) software modifications. A marketing submission for a device may include one or more AI-enabled medical device software functions and may include a Predetermined Change Control Plan (PCCP). Learn more about the FDA’s guidance for Predetermined Change Control Plan for Artificial Intelligence-Enabled Device Software Functions. The FDA has authorized over 1,600 AI-enabled medical devices for marketing in the United States as of September 2026. … Proposed Regulatory Framework for Modifications to Artificial Intelligence/Machine Learning (AI/ML)-Based Software as a Medical Device (SaMD) … The FDA’s Center for Devices and Radiological Health (CDRH) regulates medical devices, including AI-enabled medical devices, under the Federal Food, Drug, and Cosmetic Act (FD&C Act), employing a risk-based approach, taking into consideration the device’s intended use and technological characteristics.",
+            "url": "https://www.fda.gov/medical-devices/software-medical-device-samd/artificial-intelligence-software-medical-device"
+          },
+          {
+            "source": "www.berkleyls.com",
+            "snippet": "Software that qualifies as non-device CDS is not subject to the FDA's premarket review requirements and has no need for a PCCP. Software that crosses the line into regulated Software as a Medical Device (SaMD) triggers the full apparatus—510(k) or De Novo submissions, PCCP planning, labeling obligations, post-market surveillance, and cybersecurity compliance. … The vast majority are classified as Class II and entered the market through the 510(k) pathway. Some were authorized through the De Novo pathway, and a small number have received premarket approval (PMA), typically as Class III devices. The agency's regulatory approach to these devices—particularly its newly finalized framework for Predetermined Change Control Plans—is something companies should consider moving from passive monitoring to active planning. … A Predetermined Change Control Plan (PCCP) is a documented plan submitted alongside a device's initial marketing application—whether a 510(k), De Novo request, or PMA—that describes specific modifications the manufacturer intends to make after authorization, the methodology for developing, validating, and implementing those modifications, and an assessment of their impact on safety and effectiveness. … Only the version of the device cleared or approved prior to any PCCP-authorized changes may be referenced in a 510(k) comparison. Once a manufacturer independently clears the modified version through a subsequent marketing submission, it becomes eligible as a predicate—but not before. For companies, this restriction has implications beyond regulatory sequencing. … Software that qualifies as non-device CDS is not subject to the FDA's premarket review requirements and has no need for a PCCP. Software that crosses the line into regulated Software as a Medical Device (SaMD) triggers the full apparatus—510(k) or De Novo submissions, PCCP planning, labeling obligations, post-market surveillance, and cybersecurity compliance.",
+            "url": "https://www.berkleyls.com/blog/fda-aiml-samd-framework-what-companies-need-know-now",
+            "date": "2026-09-04"
+          },
+          {
+            "source": "pmc.ncbi.nlm.nih.gov",
+            "snippet": "While efficient, the 510(k) pathway does not require independent clinical data demonstrating performance or safety.2 Ours is the first study to focus on FDA-regulated radiology devices, showing that clinical testing remains uncommon, even as device approvals accelerate. Today, most AI/ML devices are used in conjunction with a human, yet only 56 were tested with any human operator. Most have not been validated against defined clinical or performance end points. In a study of radiologists interpreting chest radiographs with AI assistance, high performers maintained strong performance, while low performers did not necessarily improve.3 Such heterogeneity in performance raises questions about clinical generalizability. … While efficient, the 510(k) pathway does not require independent clinical data demonstrating performance or safety.2 Ours is the first study to focus on FDA-regulated radiology devices, showing that clinical testing remains uncommon, even as device approvals accelerate. Today, most AI/ML devices are used in conjunction with a human, yet only 56 were tested with any human operator. Most have not been validated against defined clinical or performance end points. In a study of radiologists interpreting chest radiographs with AI assistance, high performers maintained strong performance, while low performers did not necessarily improve.3 Such heterogeneity in performance raises questions about clinical generalizability. … 3.Yu F, Moehring A, Banerjee O, Salz T, Agarwal N, Rajpurkar P. Heterogeneity and predictors of the effects of AI assistance on radiologists. Nat Med. 2024;30(3):837-849. … Artificial intelligence and machine learning (AI/ML) increasingly support clinical decision-making, particularly in radiology. The number of AI-enabled tools cleared by the US Food and Drug Administration (FDA) continues to rise. However, evidence about clinical generalizability is lacking.1 We focus on FDA-regulated AI devices in radiology, analyzing premarket submissions with emphasis on testing. … For each device, data regarding device testing, such as prospective, human-in-the-loop, and clinical testing, was collected (eMethods in Supplement 1). Inclusion and exclusion criteria are in eMethods in Supplement 1. Radiology devices were evaluated via the summary submission documents.",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12595527/"
+          }
+        ],
+        "reasoning": "FDA.gov confirms AI-enabled medical devices go through risk-based premarket review (510(k), De Novo or PMA), including review of significant changes. Two caveats: 'carefully' is a judgment, since 510(k) clearance does not require independent clinical data, and non-device clinical decision support is exempt from review."
+      },
+      {
+        "id": "c4",
+        "claim": "Full autonomy for AI in healthcare isn't happening anytime soon.",
+        "speaker": "Alex Moore",
+        "timestamp": "01:15",
+        "type": "prediction",
+        "verdict": "unverifiable",
+        "confidence": 0.4,
+        "evidence": [],
+        "reasoning": "Prediction about the future; it can't be checked yet."
+      },
+      {
+        "id": "c5",
+        "claim": "Hospitals offer smart triage chatbots on their websites or apps to help patients figure out next steps before seeing a doctor.",
+        "speaker": "Dr. Priya Patel",
+        "timestamp": "01:50",
+        "type": "factual",
+        "verdict": "verified",
+        "confidence": 0.75,
+        "evidence": [
+          {
+            "source": "www.newswise.com",
+            "snippet": "Barton Schmitt, the coauthor of the Schmitt–Thompson telephone triage protocols. Clearstep combined a probabilistic natural-language processing layer with a rules-based clinical expert system. The solution, called “Check Symptoms & Get Care,” was deployed across the Mount Sinai public website and integrated within the MyMountSinai mobile app (powered by Epic) in early 2023. From over 60,000 visits, approximately 22,000 patients completed digital triage sessions (37% initiation and approximately 80% completion), with high satisfaction (a system usability scale score of 85.5 and approximately 75% of users rating greater than or equal to 8 out of 10), broad after-hours utilization (71% of use outside business hours), and zero reported safety incidents. … Newswise — Mount Sinai Health System, one of New York City’s largest academic medical centers, faced a common patient-access challenge: individuals presenting with new symptoms often did not know where to turn, contributing to delayed care, unnecessary clinic and emergency department visits, and inefficient use of provider and facility resources. To improve care navigation, Mount Sinai implemented a scalable, evidence-based, artificial intelligence (AI)–driven, digital self-triage solution. … Artificial Intelligence (AI) Clinical Decision Support Symptom checker Digital triage Healthcare innovation … Barton Schmitt, the coauthor of the Schmitt–Thompson telephone triage protocols. Clearstep combined a probabilistic natural-language processing layer with a rules-based clinical expert system. The solution, called “Check Symptoms & Get Care,” was deployed across the Mount Sinai public website and integrated within the MyMountSinai mobile app (powered by Epic) in early 2023. From over 60,000 visits, approximately 22,000 patients completed digital triage sessions (37% initiation and approximately 80% completion), with high satisfaction (a system usability scale score of 85.5 and approximately 75% of users rating greater than or equal to 8 out of 10), broad after-hours utilization (71% of use outside business hours), and zero reported safety incidents. … 15-Jul-2026 at 6:20 PM EDT, by Mount Sinai Health System contact patient services",
+            "url": "https://www.newswise.com/articles/check-symptoms-get-care-mount-sinai-s-ai-triage-solution",
+            "date": "2026-07-15"
+          },
+          {
+            "source": "healthjournalism.org",
+            "snippet": "Mount Sinai’s program, called Check Symptoms and Get Care, was built in partnership with Barton Schmitt, M.D., co-author of the Schmitt-Thompson telephone triage protocols used by nurses nationwide. … For example, researchers at the University of California San Diego published information about a chatbot they designed that incorporates information from 100 step-by-step medical flowcharts developed by the American Medical Association. Ask about future features these tools could incorporate. Poll: 1 in 3 adults are turning to AI chatbots for health information – KFF news release · Check Symptoms & Get Care: Mount Sinai’s AI Triage Solution – NEJM Catalyst … AI chatbots miss initial diagnoses 80% of the time: Mass General Brigham study – Becker’s Health IT · ChatGPT Health performance in a structured test of triage recommendations – Nature Medicine … Mount Sinai’s program, called Check Symptoms and Get Care, was built in partnership with Barton Schmitt, M.D., co-author of the Schmitt-Thompson telephone triage protocols used by nurses nationwide. “Patients using it can trust that it will route them according to clinical best practice,” Naved told AHCJ. “It won’t hallucinate. It’ll be consistent. It’ll be safe.” · Other academic centers incorporating programs like this include Tufts Medicine in Boston, Baylor Scott and White Health in Dallas, and Banner Health in Tucson, Ariz. … Three in 10 (29%) say they used AI tools for information or advice about their physical health, and one in six (16%) used them for mental health information. But the accuracy generated by general chatbots like ChatGPT Health has been variable, according to the medical literature.",
+            "url": "https://healthjournalism.org/blog/2026/08/ai-powered-symptom-checkers/",
+            "date": "2026-08-18"
+          },
+          {
+            "source": "nam.edu",
+            "snippet": "Remote digital sensors such as ... monitoring. AI-powered conversational chatbots were deployed by the CDC and thousands of hospitals and clinics to enable patients to self-assess their potential COVID-19 symptoms.... … As mentioned previously, relaxed regulations with regard to telehealth played a critical role in expanding access. Remote digital sensors such as heart rate monitors and pulse oximetry were well-utilized during the pandemic, offering the opportunity for more equitable home-based care monitoring. AI-powered conversational chatbots were deployed by the CDC and thousands of hospitals and clinics to enable patients to self-assess their potential COVID-19 symptoms. … There have been many shining examples of how digital health solutions have helped in critical ways during the pandemic. Perhaps the most noticeable acceleration, both in the United States and other parts of the world, has been in the rapid adoption of telemedicine, but there have also been less visible digitally-dependent advances that are just as important across all sectors of health care, public health, and medical research. … As highlighted in a situation such as COVID-19, where patients may be obtaining health care from a diverse set of providers and via a diverse set of delivery means (such as telehealth), the “portability” of a PHR should, in principle, benefit all stakeholders in a patient’s care and safety. PHR architectures have been proposed to the HHS Office of the National Coordinator for Health Information Technology (ONC) several times, but have never been adopted due to privacy concerns or concerns about data overload [126,127]. Nevertheless, a growing number of health care systems around the world today are seeking ways to adopt this approach. … Conducting a post-pandemic “after action report” to carefully evaluate the benefits and risks of clinical research innovations deployed during the pandemic (e.g., remote patient evaluation using telehealth solutions) and to develop approaches to allow meaningful innovations to persist.",
+            "url": "https://nam.edu/perspectives/digital-health-covid-19-impact-assessment-lessons-learned-and-compelling-needs/",
+            "date": "2025-01-08"
+          }
+        ],
+        "reasoning": "Mount Sinai put an AI self-triage tool on its public website and in its MyMountSinai app; Tufts Medicine, Baylor Scott & White and Banner Health run similar tools. These tools tell patients where to seek care."
+      },
+      {
+        "id": "c6",
+        "claim": "AI learns from existing clinical data, which may be skewed, making data privacy and bias major hurdles.",
+        "speaker": "Alex Moore",
+        "timestamp": "02:20",
+        "type": "factual",
+        "verdict": "verified",
+        "confidence": 0.68,
+        "evidence": [
+          {
+            "source": "www.science.org",
+            "snippet": "Sincerely, Eran Bellin, M.D. Professor ... 1. Obermeyer Z, Powers B, Vogeli C, Mullainathan S. Dissecting racial bias in an algorithm used to manage the health of populations.... … Health systems rely on commercial prediction algorithms to identify and help patients with complex health needs. We show that a widely used algorithm, typical of this industry-wide approach and aff... … Sincerely, Eran Bellin, M.D. Professor of Epidemiology and Population Health and Medicine Albert Einstein College of Medicine Bronx, N.Y. Vice President Clinical IT Research and Development Montefiore Information Technology · 1. Obermeyer Z, Powers B, Vogeli C, Mullainathan S. Dissecting racial bias in an algorithm used to manage the health of populations. Science. 2019;366(6464):447-453. … Ziad Obermeyer et al. ,Dissecting racial bias in an algorithm used to manage the health of populations.Science366,447-453(2019).DOI:10.1126/science.aax2342 … Nov. 5, 2019 ... The inattentive reader will miss a crucial acknowledgement by Obermeyer et al(1) of a serious tautology inherent in the described analytic enterprise. It goes like this: If you build a model to distribute future health care resources based upon billing of present consumption.",
+            "url": "https://www.science.org/doi/10.1126/science.aax2342"
+          },
+          {
+            "source": "www.ftc.gov",
+            "snippet": "affecting millions of patients, exhibits significant racial bias: At a given risk score, Black patients · are considerably sicker than White patients, as evidenced by signs of uncontrolled illnesses. Remedying this disparity would increase the percentage of Black patients receiving additional · help from 17.7 to 46.5%. The bias arises because the algorithm predicts health care costs rather than … affecting millions of patients, exhibits significant racial bias: At a given risk score, Black patients · are considerably sicker than White patients, as evidenced by signs of uncontrolled illnesses. Remedying this disparity would increase the percentage of Black patients receiving additional · help from 17.7 to 46.5%. The bias arises because the algorithm predicts health care costs rather than … by some measures of predictive accuracy, large racial biases arise. We suggest that the choice of · convenient, seemingly effective proxies for ground truth can be an important source of algorithmic … reduces the number of Black patients identified for extra care by more than half. Bias occurs because the algorithm uses · algorithm are sicker than White patients (see the Perspective by Benjamin). The authors estimated that this racial bias … algorithm so that it no longer uses costs as a proxy for needs eliminates the racial bias in predicting who needs extra",
+            "url": "https://www.ftc.gov/system/files/documents/public_events/1548288/privacycon-2020-ziad_obermeyer.pdf"
+          },
+          {
+            "source": "pmc.ncbi.nlm.nih.gov",
+            "snippet": "This necessitates training of the network with such diverse data, thus bringing to the fore the need to find solutions to such legal challenges. The distribution of data used for training such algorithms can by themselves be a source of bias, raising some ethical concerns. … For example, in Europe, health-related information is protected by the same set of rules that govern all data sharing, European Union's General Data Protection Regulation,[27] whereas there are more health data-specific laws in the United States, like HIPAA.[18] This may leave loopholes in terms of data sharing regulations which may be exploited.[28,29] More importantly, deep learning is inherently sensitive to biases in the underlying data. … This necessitates training of the network with such diverse data, thus bringing to the fore the need to find solutions to such legal challenges. The distribution of data used for training such algorithms can by themselves be a source of bias, raising some ethical concerns. … Many applications of AI in healthcare involve the consumption of protected health information as well as unprotected data generated by the users themselves, such as health trackers on smart devices, Internet search history and inferences from shopping patterns, or by entities not covered by protective laws such as Health Insurance Portability and Accountability Act (HIPAA).[18,22,23] Removal of the required identifiers in compliance with such laws can be rendered redundant if such data can be re-identified through triangulation with these other identifiable data sets. … Socio-economic minorities and marginalized populations that are missing from non-health data such as credit card use or Internet history may also be absent from big health data due to lack of affordability or insurance.[18,30] When trained on such data, for instance, the AI may recommend suboptimal treatment to a community, that is traditionally (as seen in the EMR) marginalized, simply because the network learns that such patients have undergone suboptimal treatment, without understanding the socio-economic basis of such treatment. This is demonstrated amply by the experience of the company Amazon, which discovered that their recruitment system was biased against women, simply because of the gender bias in the data it was trained on.",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10718098/"
+          }
+        ],
+        "reasoning": "Obermeyer et al. (Science, 2019) showed a widely used health algorithm learned racial bias from its training data (it predicted cost as a stand-in for need). Peer-reviewed literature also describes privacy as a major barrier for healthcare AI and notes that skewed training data causes bias."
+      },
+      {
+        "id": "c7",
+        "claim": "Hospitals adopt AI for efficiency, faster reads and fewer errors.",
+        "speaker": "Dr. Priya Patel",
+        "timestamp": "03:05",
+        "type": "factual",
+        "verdict": "verified",
+        "confidence": 0.71,
+        "evidence": [
+          {
+            "source": "www.documents.philips.com",
+            "snippet": "As one survey respondent said, there are “Just a · lot of unknowns at the moment.” These concerns point to a clear need for · stronger validation, transparent ROI and solutions that streamline rather ... AI’s immediate impact is seen in its ability to enhance workflow. Respondents believe it can help prioritize urgent · cases (22%) and support radiologists with complex findings (21%). Beyond efficiency, AI adds significant clinical … But while the potential is undeniable, the path to widespread adoption is · complex, marked by financial, operational and cultural hurdles. To better understand the current landscape, Philips Healthcare · conducted a nationwide survey of AHRA members, capturing insights · from radiology leaders across hospitals, imaging centers and clinics. … Larger hospitals are moving · faster, driven by enterprise IT capabilities, capital resources and staffing pressures. Smaller · facilities, however, face intensified budget constraints, risk aversion and uncertainty about ROI. ... Radiology systems: large vs. small facilities ... Concerns about clinical accuracy (35%) and staff readiness are significant. Many survey respondents expressed uncertainty about AI’s reliability and … As one survey respondent said, there are “Just a · lot of unknowns at the moment.” These concerns point to a clear need for · stronger validation, transparent ROI and solutions that streamline rather ... AI’s immediate impact is seen in its ability to enhance workflow. Respondents believe it can help prioritize urgent · cases (22%) and support radiologists with complex findings (21%). Beyond efficiency, AI adds significant clinical … efficiency4. This capability supports radiologists and imaging departments · by reducing energy consumption, streamlining workflow and enhancing · safety during system management. As Dr. Miller summarized, this innovation · is “meaningful from energy cost savings and possibly from a safety · standpoint,” highlighting its benefits for both providers and patients. Early adopters are already seeing measurable benefits.",
+            "url": "https://www.documents.philips.com/assets/20260123/bbc8f7571d8347f0aa22b3db011b43bc.pdf"
+          },
+          {
+            "source": "pmc.ncbi.nlm.nih.gov",
+            "snippet": "The prominent role of operational efficiency observed in our findings (β = 0.306) aligns with recent systematic evaluations of radiological workflows, which demonstrate that AI integration can reduce median reporting times by up to 36% and turnaround times by nearly an hour, particularly in ... … The prominent role of operational efficiency observed in our findings (β = 0.306) aligns with recent systematic evaluations of radiological workflows, which demonstrate that AI integration can reduce median reporting times by up to 36% and turnaround times by nearly an hour, particularly in emergent cross-sectional imaging (30). Our study also focused on the human dimension of AI adoption, specifically the relationship between AI utilization and staff performance. … In practice, medical imaging departments operate under increasing pressure to manage rising patient volumes, reduce reporting turnaround times, and address workforce shortages and burnout among radiologists (11–14). In this context, AI should not be evaluated solely as a diagnostic adjunct but as an integrated system capable of enhancing both clinical decision-making and departmental efficiency. … Content validity: the instrument underwent a formal review by an expert panel (n = 3) specializing in health informatics and radiology to ensure the items accurately captured the technical and operational nuances of AI adoption. Pilot study: a pilot test was conducted with 40 imaging professionals to assess the instrument’s internal consistency. Cronbach’s Alpha coefficients for all constructs ranged from 0.82 to 0.91, exceeding the 0.70 threshold for high reliability. The survey was distributed electronically and in person between January 2025 and January 2026. … Keywords: Artificial Intelligence, computed tomography, diagnostic accuracy, medical imaging, technology adoption · Artificial Intelligence (AI) has emerged as a transformative force in healthcare, fundamentally redefining the landscape of diagnostic imaging (1, 2). Early applications in radiology were largely limited to rule-based computer-aided detection systems; however, the advent of advanced deep learning architectures has enabled highly sophisticated capabilities, including automated image segmentation, anomaly detection, predictive modeling, and intelligent workflow prioritization (3–6).",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13402428/"
+          },
+          {
+            "source": "www.philips.com",
+            "snippet": "For example, at Fundação Instituto ... insights directly within their diagnostic viewer. Chest X-ray turnaround times have dropped to as little as two minutes, supporting faster, more informed and confident decis... … For example, at Fundação Instituto de Pesquisa e Estudo de Diagnóstico por Imagem in Brazil, radiologists can now view AI-generated insights directly within their diagnostic viewer. Chest X-ray turnaround times have dropped to as little as two minutes, supporting faster, more informed and confident decisions. … Referring physicians depend upon imaging reports to guide diagnostic and treatment decisions, making their confidence in AI-supported results equally critical.Research shows that referring physicians are more likely to trust AI when its outputs are transparent, legal responsibilities are clearly defined, and strong data protection measures are in place [5]. Meeting these expectations is essential to enable responsible adoption, build trust, and ensure the effective integration of AI into clinical radiology workflows. … When thoughtfully designed and implemented, AI systems promise to make radiologists’ work both more efficient and more consistent. The Philips 2025 Future Health Index reflects this optimism: 85% of radiologists believe AI will help ensure greater consistency in patient examinations, with the same number saying it can ultimately improve patient outcomes. Radiologists are also clear about the cost of inaction. They say that those not adopting AI – or doing so more slowly than others – risk worsening clinician burnout from administrative overload, missing opportunities for early intervention, and allowing patient backlogs to grow. … AI-enabled systems are also transforming the acquisition of medical images. For example, at KMC Manipal Hospital in India, AI-enabled CT workflows have empowered clinicians to serve 20 to 30 more patients daily while maintaining diagnostic accuracy and image quality of CT scans.",
+            "url": "https://www.philips.com/a-w/about/news/archive/features/2025/ai-in-radiology-three-keys-to-real-world-impact.html",
+            "date": "2026-01-30"
+          },
+          {
+            "source": "www.unite.ai",
+            "snippet": "In 2026, the American Medical ... 2023 rate. The appeal is understandable. Hospitals are under pressure to improve access, reduce burnout, manage costs, and move information faster.... … Administrative work was rising, workforce pressure was intensifying, and clinicians were spending too much time on tasks that did not require clinical judgment. That demand has only grown. In 2026, the American Medical Association reported that 81 percent of physicians surveyed used AI in practice, more than double the 2023 rate. The appeal is understandable. Hospitals are under pressure to improve access, reduce burnout, manage costs, and move information faster. … A clinician who receives hundreds of AI-assisted recommendations is not reviewing each one from first principles. A staff member working a high-volume queue may accept a suggested priority because the interface presents it as the default. … Consider a patient-message assistant that drafts follow-up instructions after discharge. The clinician may remain responsible for approval, but the practical safeguards depend on the workflow. Is the draft clearly marked as machine-generated? Does the reviewer see the clinical source material behind it? … Hospitals therefore adopted more than efficiency.",
+            "url": "https://www.unite.ai/hospital-ai-adoption-governance-risks/",
+            "date": "2026-08-13"
+          }
+        ],
+        "reasoning": "Surveys of radiology leaders and imaging professionals cite workflow efficiency, prioritizing urgent cases, shorter turnaround times and fewer diagnostic errors as the reasons for adopting AI. Hospitals' pressure to work faster and reduce burnout is also widely documented."
+      },
+      {
+        "id": "c8",
+        "claim": "The pandemic accelerated digital health adoption, including AI tools.",
+        "speaker": "Alex Moore",
+        "timestamp": "03:30",
+        "type": "factual",
+        "verdict": "verified",
+        "confidence": 0.7,
+        "evidence": [
+          {
+            "source": "nam.edu",
+            "snippet": "Remote digital sensors such as ... monitoring. AI-powered conversational chatbots were deployed by the CDC and thousands of hospitals and clinics to enable patients to self-assess their potential COVID-19 symptoms.... … As mentioned previously, relaxed regulations with regard to telehealth played a critical role in expanding access. Remote digital sensors such as heart rate monitors and pulse oximetry were well-utilized during the pandemic, offering the opportunity for more equitable home-based care monitoring. AI-powered conversational chatbots were deployed by the CDC and thousands of hospitals and clinics to enable patients to self-assess their potential COVID-19 symptoms. … There have been many shining examples of how digital health solutions have helped in critical ways during the pandemic. Perhaps the most noticeable acceleration, both in the United States and other parts of the world, has been in the rapid adoption of telemedicine, but there have also been less visible digitally-dependent advances that are just as important across all sectors of health care, public health, and medical research. … As highlighted in a situation such as COVID-19, where patients may be obtaining health care from a diverse set of providers and via a diverse set of delivery means (such as telehealth), the “portability” of a PHR should, in principle, benefit all stakeholders in a patient’s care and safety. PHR architectures have been proposed to the HHS Office of the National Coordinator for Health Information Technology (ONC) several times, but have never been adopted due to privacy concerns or concerns about data overload [126,127]. Nevertheless, a growing number of health care systems around the world today are seeking ways to adopt this approach. … Conducting a post-pandemic “after action report” to carefully evaluate the benefits and risks of clinical research innovations deployed during the pandemic (e.g., remote patient evaluation using telehealth solutions) and to develop approaches to allow meaningful innovations to persist.",
+            "url": "https://nam.edu/perspectives/digital-health-covid-19-impact-assessment-lessons-learned-and-compelling-needs/",
+            "date": "2025-01-08"
+          },
+          {
+            "source": "pmc.ncbi.nlm.nih.gov",
+            "snippet": "Furthermore, monitoring infected ... leading to timely interventions and resource mobilization [5]. The pandemic has pushed healthcare systems to embrace digital transformation at an accelerated ...... … Digital tools have facilitated the rapid sharing and analysis of vast amounts of genomic data, aiding scientists in tracking viral mutations and identifying potential variants of concern. Furthermore, monitoring infected populations and areas using intelligent information systems, sensor technologies, and IoT devices has enabled the early detection of outbreaks, leading to timely interventions and resource mobilization [5]. The pandemic has pushed healthcare systems to embrace digital transformation at an accelerated pace. … Privacy and security concerns surrounding the collection and use of personal health data demand careful attention to maintain public trust [4,18]. Socioeconomic disparities and varying healthcare systems have influenced the adoption and effectiveness of digital solutions, necessitating a holistic approach to ensure equitable access and outcomes. The COVID-19 pandemic has presented the world with an unprecedented opportunity to embrace digital health innovations [19]. The rapid advancements in sensor technologies, artificial intelligence, deep learning, and the IoT have catalyzed transformative changes in healthcare systems globally [20]. This Special Issue serves as a comprehensive exploration of the multifaceted digital solutions employed to combat the pandemic. … [12] analyze factors influencing the continuance intention of using telehealth systems. Wu et al. [13] compare the perception of telemedicine between outpatients and medical staff. Al-Rayes et al. [14] assess the awareness and use of virtual clinics in Saudi Arabia. Camacho-Leon et al. [15] provide a narrative review of telemedicine adoption in Latin America during the pandemic. … 12.Hsieh H.-L., Lai J.-M., Chuang B.-K., Tsai C.-H. Determinants of Telehealth Continuance Intention: A Multi-Perspective Framework. Healthcare. 2022;10:2038. doi: 10.3390/healthcare10102038. [DOI] [PMC free article] [PubMed] [Google Scholar] 13.Wu J.-J., Wu C.-L., Lee M.-H., Huang C.-C., Huang Y.-J., Hsu P.-S. Perception Disparity of Telemedicine Use between Outpatients and Medical Staff during the COVID-19 Pandemic.",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10340680/"
+          },
+          {
+            "source": "pmc.ncbi.nlm.nih.gov",
+            "snippet": "Nevertheless, the COVID-19 pandemic has changed the factors of adoption and boosted the digital transformation of healthcare, mainly due to contamination avoidance (Baudier et al., 2021). Indeed, the COVID-19 pandemic has been a great shock that has led to the acceleration of digital transformation ... … Nevertheless, the COVID-19 pandemic has changed the factors of adoption and boosted the digital transformation of healthcare, mainly due to contamination avoidance (Baudier et al., 2021). Indeed, the COVID-19 pandemic has been a great shock that has led to the acceleration of digital transformation in several service industries, such as education, consultancy, and healthcare (Cobianchi et al., 2020a; Raj et al., 2020; Alexopoulos et al., 2020; Secundo et al., 2019). This study aimed to analyze the factors influencing the adoption of medical teleconsultation platforms by patients during COVID-19 times. … This research aimed to study the digital transformation of healthcare services during the COVID-19 pandemic. Indeed, medical teleconsultation solutions are changing patients' behavior and providing a basis for the creation of a resilient society. This study highlights the determinants that affect the adoption of such disruptive technologies. … Fan W., Liu J., Zhu S., Pardalos P.M. Investigating the impacting factors for the healthcare professionals to adopt artificial intelligence-based medical diagnosis support system (AIMDSS) Ann. Oper. Res. 2018:1–26. … (2020) found that EE has no impact on students’ intention to use a telemedicine cabin, and Francis (2019) found no evidence of this impact on the adoption of health self-monitoring devices. Nevertheless, in the context of COVID-19, Napitupulu et al. (2021) demonstrated a significant influence of EE when using telehealth services (Napitupulu et al., 2021).",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9108035/"
+          },
+          {
+            "source": "doi.org",
+            "snippet": "John Wiley & Sons; 2026:1-7. [CrossRef]1]. Telehealth use increased rapidly during and after the COVID-19 pandemic and has remained an important channel for care delivery, while AI has been introduced across a growing range of clinical and ... … Background: Telehealth expansion and artificial intelligence (AI) adoption are often described as parallel dimensions of health system digital transformation. However, whether telehealth scale is associated with hospital AI adoption and whether this relationship varies across hospital settings remain unclear. … Telehealth expansion and artificial intelligence (AI) adoption are 2 prominent dimensions of the ongoing digital transformation in health care [Liu L, Wang F. Telehealth accessibility. In: International Encyclopedia of Geography. John Wiley & Sons; 2026:1-7. [CrossRef]1]. Telehealth use increased rapidly during and after the COVID-19 pandemic and has remained an important channel for care delivery, while AI has been introduced across a growing range of clinical and operational functions in hospitals [Rajpurkar P, Chen E, Banerjee O, Topol EJ. … Together, these findings suggest that telehealth capacity may serve as a model-based marker of broader digital infrastructure and organizational readiness relevant to clinical AI adoption, but the cross-sectional design does not establish whether telehealth expansion precedes or causes AI adoption. These results also help clarify the relationship between telehealth and AI, which are often discussed in separate policy and implementation literature. Telehealth is commonly framed as an access strategy [Patel SY, Mehrotra A, Huskamp HA, Uscher-Pines L, Ganguli I, Barnett ML. Variation in telemedicine use and outpatient care during the COVID-19 pandemic in the United States. … When hospitals were stratified by clinical AI adoption tiers, 3441 (55.7%) were classified as tier 0, 1544 (25%) as tier 1, and 1188 (19.2%) as tier 2 (Table 1). Clinical AI scores increased from a median of 0 (IQR 0‐0) in tier 0 to 22 (IQR 19‐25) in tier 2, while operational AI scores increased from 0 (IQR 0‐0) to 14 (IQR 11‐17; P<.001 for both). Telehealth volume increased in parallel, from a median of 0.00 thousand visits (IQR 0.00‐0.74) in tier 0 to 2.40 (IQR 0.21‐20.93) in tier 2 (P<.001).",
+            "url": "https://doi.org/10.2196/96762",
+            "date": "2026-06-12"
+          }
+        ],
+        "reasoning": "The National Academy of Medicine and peer-reviewed reviews say COVID-19 sped up digital health adoption, especially telehealth. NAM also notes that the CDC and thousands of hospitals deployed AI chatbots for symptom self-assessment during the pandemic."
+      },
+      {
+        "id": "c9",
+        "claim": "Next will come AI copilots that suggest treatment plans, but a human will always make the final call.",
+        "speaker": "Dr. Priya Patel",
+        "timestamp": "04:15",
+        "type": "prediction",
+        "verdict": "unverifiable",
+        "confidence": 0.4,
+        "evidence": [],
+        "reasoning": "Prediction about the future; it can't be checked yet."
+      },
+      {
+        "id": "c10",
+        "claim": "AI will work best when healthcare systems talk to each other securely; interoperability is key.",
+        "speaker": "Alex Moore",
+        "timestamp": "04:40",
+        "type": "opinion",
+        "verdict": "unverifiable",
+        "confidence": 0.4,
+        "evidence": [],
+        "reasoning": "Opinion, not a factual claim."
+      },
+      {
+        "id": "c11",
+        "claim": "AI is powerful, but cautious optimism is the way forward.",
+        "speaker": "David Chen",
+        "timestamp": "05:10",
+        "type": "opinion",
+        "verdict": "unverifiable",
+        "confidence": 0.4,
+        "evidence": [],
+        "reasoning": "Opinion, not a factual claim."
+      }
+    ]
+  },
+  "run": {
+    "provider": "anthropic",
+    "model": "claude-opus-5-5",
+    "tokens": {
+      "input": 16,
+      "output": 7620,
+      "cache_read": 34937,
+      "cache_write": 44569
+    },
+    "cost_usd": 0,
+    "duration_ms": 69849,
+    "trace_id": "4c3222173f5f5770",
+    "warnings": []
+  }
+}
