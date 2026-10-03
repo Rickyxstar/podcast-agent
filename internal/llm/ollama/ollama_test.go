@@ -218,16 +218,15 @@ func TestBadInput(t *testing.T) {
 }
 
 func TestHost(t *testing.T) {
-	tests := []struct{ cfg, env, want string }{
-		{"", "", "http://localhost:11434/api/chat"},
-		{"", "0.0.0.0:11434", "http://0.0.0.0:11434/api/chat"},
-		{"", "https://ollama.internal/", "https://ollama.internal/api/chat"},
-		{"http://ollama:11434", "other:1", "http://ollama:11434/api/chat"},
+	tests := map[string]string{
+		"":                         "http://localhost:11434/api/chat",
+		"0.0.0.0:11434":            "http://0.0.0.0:11434/api/chat",
+		"https://ollama.internal/": "https://ollama.internal/api/chat",
+		"http://ollama:11434":      "http://ollama:11434/api/chat",
 	}
-	for _, tt := range tests {
-		t.Setenv("OLLAMA_HOST", tt.env)
-		if got := New(Config{Host: tt.cfg}).url; got != tt.want {
-			t.Errorf("Host %q, OLLAMA_HOST %q: url = %q, want %q", tt.cfg, tt.env, got, tt.want)
+	for host, want := range tests {
+		if got := New(Config{Host: host}).url; got != want {
+			t.Errorf("Host %q: url = %q, want %q", host, got, want)
 		}
 	}
 }

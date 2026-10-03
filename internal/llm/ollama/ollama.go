@@ -11,14 +11,13 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"strings"
 
 	"github.com/Rickyxstar/podcast-agent/internal/llm"
 )
 
 const (
-	// DefaultHost is used when neither Config.Host nor OLLAMA_HOST is set.
+	// DefaultHost is used when Config.Host is empty.
 	DefaultHost = "http://localhost:11434"
 	// DefaultModel is a small model that handles tool calls reasonably well.
 	DefaultModel = "qwen2.5:7b"
@@ -30,7 +29,7 @@ const (
 
 // Config sets per-provider defaults. Fields left zero use the package defaults.
 type Config struct {
-	// Host is the server URL. Empty uses OLLAMA_HOST, then DefaultHost.
+	// Host is the server URL, with or without a scheme. Empty uses DefaultHost.
 	Host  string
 	Model string
 	// MaxTokens caps output tokens when a request doesn't set its own. Zero
@@ -55,8 +54,8 @@ var _ llm.Provider = (*Provider)(nil)
 
 // New returns a Provider for the Ollama server at cfg.Host.
 func New(cfg Config) *Provider {
-	host := strings.TrimRight(cmp.Or(cfg.Host, os.Getenv("OLLAMA_HOST"), DefaultHost), "/")
-	// OLLAMA_HOST is often a bare host:port, such as "0.0.0.0:11434".
+	host := strings.TrimRight(cmp.Or(cfg.Host, DefaultHost), "/")
+	// OLLAMA_HOST-style values are often a bare host:port, such as "0.0.0.0:11434".
 	if !strings.Contains(host, "://") {
 		host = "http://" + host
 	}
