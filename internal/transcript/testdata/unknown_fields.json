@@ -1,0 +1,10 @@
+{
+  "episode_id": "ep104",
+  "title": "Extra Fields",
+  "host": "Ann Host",
+  "guests": ["Ben Guest"],
+  "duration": "10:00",
+  "transcript": [
+    {"timestamp": "00:00", "speaker": "Ann", "section": "Introduction", "text": "Hello.", "confidence": 0.9}
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "episode_id": "ep101",
+  "title": "Multi Guest",
+  "host": "Ann Host",
+  "guests": ["Dr. Cara Guest", "Dan Guest"],
+  "transcript": [
+    {"timestamp": "00:00", "speaker": "Ann", "section": "Introduction", "text": "Two guests today."},
+    {"timestamp": "00:15", "speaker": "Dr. Cara", "section": "Deep Dive", "text": "Glad to be here."},
+    {"timestamp": "01:05", "speaker": "Dan", "section": "Pros & Cons", "text": "Same here."}
+  ]
+}

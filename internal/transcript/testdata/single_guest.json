@@ -1,0 +1,10 @@
+{
+  "episode_id": "ep100",
+  "title": "Single Guest",
+  "host": "Ann Host",
+  "guests": ["Ben Guest"],
+  "transcript": [
+    {"timestamp": "00:00", "speaker": "Ann", "section": "Introduction", "text": "Welcome to the show."},
+    {"timestamp": "00:10", "speaker": "Ben", "section": "Introduction", "text": "Thanks for having me."}
+  ]
+}

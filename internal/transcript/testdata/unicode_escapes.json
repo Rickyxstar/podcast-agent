@@ -1,0 +1,9 @@
+{
+  "episode_id": "ep103",
+  "title": "Escapes — Decoded",
+  "host": "Ann Host",
+  "guests": ["Ben Guest"],
+  "transcript": [
+    {"timestamp": "00:00", "speaker": "Ann", "section": "Introduction", "text": "It’s working."}
+  ]
+}
