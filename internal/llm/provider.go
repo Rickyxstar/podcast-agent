@@ -143,8 +143,9 @@ const (
 	EffortMax    Effort = "max"
 )
 
-// Usage counts the tokens a call consumed. Cache fields are zero for
-// providers without prompt caching.
+// Usage counts the tokens a call consumed. InputTokens excludes cached
+// tokens, so total input is InputTokens + CacheReadTokens + CacheWriteTokens.
+// Cache fields are zero for providers without prompt caching.
 type Usage struct {
 	InputTokens      int
 	OutputTokens     int
