@@ -27,6 +27,7 @@ go.work.sum
 
 # env file
 .env
+.envrc
 
 # Editor/IDE
 # .idea/
@@ -34,3 +35,6 @@ go.work.sum
 
 # Ricky's stash
 nogit
+
+# Build output
+bin/
