@@ -9,7 +9,7 @@ type Parser interface {
 	Parse(name string, r io.Reader) (*Episode, error)
 }
 
-// Episode is a podcast episode transcript as delivered in the input JSON.
+// Episode is a parsed podcast episode transcript. JSON tags match the input JSON format.
 type Episode struct {
 	EpisodeID  string    `json:"episode_id"`
 	Title      string    `json:"title"`
@@ -20,7 +20,8 @@ type Episode struct {
 
 // Segment is a single speaker turn within an episode transcript.
 type Segment struct {
-	// Timestamp is the offset from the start of the episode, formatted "MM:SS".
+	// Timestamp is the offset from the start of the episode as written in the
+	// source: "MM:SS" in the JSON samples, "HH:MM:SS" or "MM:SS" in text files.
 	Timestamp string `json:"timestamp"`
 	// Speaker is the short name used in the transcript (e.g. "Sarah", "Dr. Priya"),
 	// not necessarily the full name listed in Host or Guests.

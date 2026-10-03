@@ -1,0 +1,3 @@
+[00:00:00] Host: Welcome to the show.
+[00:00:10] Guest: Thanks for having me.
+[00:00:20] Host: Let's get started.
