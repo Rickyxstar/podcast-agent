@@ -1,0 +1,186 @@
+[
+  {
+    "id": "gitlab-all-remote",
+    "statement": "GitLab has been an all-remote company since its founding, with no company offices; its roughly 2,000 team members work from more than 60 countries.",
+    "source": "GitLab Handbook",
+    "url": "https://handbook.gitlab.com/handbook/company/culture/all-remote/guide/",
+    "date": "2025",
+    "tags": ["remote-work", "gitlab", "distributed-teams"]
+  },
+  {
+    "id": "gitlab-handbook-first",
+    "statement": "GitLab runs on a public handbook that serves as the single source of truth for how the company operates. Team members work handbook-first (document it in the handbook before acting on it) and asynchronously by default, with meetings as a last resort.",
+    "source": "GitLab Handbook",
+    "url": "https://handbook.gitlab.com/handbook/company/culture/all-remote/guide/",
+    "date": "2025",
+    "tags": ["remote-work", "gitlab", "documentation", "async"]
+  },
+  {
+    "id": "gitlab-remote-playbook-2020",
+    "statement": "In March 2020 GitLab published a free remote work playbook to help companies switching to remote work for the first time during the COVID-19 pandemic.",
+    "source": "TechCrunch",
+    "url": "https://techcrunch.com/2020/03/24/gitlab-offers-key-lessons-in-running-an-all-remote-workforce-in-new-e-book",
+    "date": "2020-03-24",
+    "tags": ["remote-work", "gitlab", "pandemic", "documentation"]
+  },
+  {
+    "id": "automattic-distributed",
+    "statement": "Automattic, the company behind WordPress.com, WooCommerce and Tumblr, is a fully distributed company. In April 2025 it laid off about 16% of its staff (roughly 280 people), cutting headcount from 1,777 to about 1,495.",
+    "source": "TechCrunch",
+    "url": "https://techcrunch.com/2025/04/02/wordpress-maker-automattic-lays-off-16-of-staff",
+    "date": "2025-04-02",
+    "tags": ["remote-work", "automattic", "distributed-teams", "layoffs"]
+  },
+  {
+    "id": "automattic-sf-office-2017",
+    "statement": "In 2017 Automattic closed its 15,000-square-foot San Francisco office because almost no one used it; about five people typically came in.",
+    "source": "WP Tavern",
+    "url": "https://wptavern.com/automattic-to-close-san-francisco-office",
+    "date": "2017-06",
+    "tags": ["remote-work", "automattic", "office"]
+  },
+  {
+    "id": "doist-async-first",
+    "statement": "Doist, the maker of Todoist, has been a remote company since 2011 and runs an async-first culture in which no one is expected to be online at set times. Its team of around 100 people is spread across dozens of countries.",
+    "source": "Oyster HR",
+    "url": "https://oysterhr.com/library/doist-feature",
+    "date": "",
+    "tags": ["remote-work", "doist", "async", "distributed-teams"]
+  },
+  {
+    "id": "fda-ai-device-count",
+    "statement": "From 1995 through the end of 2025 the FDA cleared or approved about 1,430 AI-enabled medical devices, almost all through the 510(k) pathway.",
+    "source": "AuntMinnie (analysis of the FDA AI-enabled device list)",
+    "url": "https://www.auntminnie.com/imaging-informatics/artificial-intelligence/article/15830219/radiology-dominates-thirty-years-of-fda-ai-device-approvals",
+    "date": "2026-07-16",
+    "tags": ["healthcare", "ai", "fda", "medical-devices", "regulation"]
+  },
+  {
+    "id": "fda-ai-radiology-share",
+    "statement": "Radiology dominates FDA-authorized AI devices: 1,094 of the 1,430 AI-enabled devices authorized from 1995 through 2025 (76.5%) were in radiology, such as tools that read X-rays, CT scans and mammograms or flag urgent findings.",
+    "source": "AuntMinnie (analysis of the FDA AI-enabled device list)",
+    "url": "https://www.auntminnie.com/imaging-informatics/artificial-intelligence/article/15830219/radiology-dominates-thirty-years-of-fda-ai-device-approvals",
+    "date": "2026-07-16",
+    "tags": ["healthcare", "ai", "fda", "radiology", "medical-devices"]
+  },
+  {
+    "id": "fda-pccp-final-guidance",
+    "statement": "On December 4, 2024 the FDA finalized guidance on predetermined change control plans (PCCPs) for AI-enabled device software. A PCCP lets a manufacturer pre-authorize planned model updates in its original submission instead of filing a new marketing application for each change.",
+    "source": "FDA (summarized by King & Spalding)",
+    "url": "https://www.kslaw.com/insights/articles/fda-publishes-final-predetermined-change-control-plan-guidance-for-ai-enabled-device-software-functions",
+    "date": "2024-12-04",
+    "tags": ["healthcare", "ai", "fda", "regulation", "medical-devices"]
+  },
+  {
+    "id": "fda-ai-lifecycle-draft-guidance",
+    "statement": "On January 7, 2025 the FDA issued draft guidance, 'Artificial Intelligence-Enabled Device Software Functions: Lifecycle Management and Marketing Submission Recommendations', covering transparency, bias, data quality, human factors and cybersecurity across the device's total product lifecycle.",
+    "source": "FDA",
+    "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/artificial-intelligence-enabled-device-software-functions-lifecycle-management-and-marketing",
+    "date": "2025-01-07",
+    "tags": ["healthcare", "ai", "fda", "regulation", "bias", "medical-devices"]
+  },
+  {
+    "id": "masai-ai-mammography",
+    "statement": "In the Swedish MASAI randomized trial of 80,033 women, AI-supported mammography screening detected 20% more cancers than standard double reading by radiologists, without raising false positives, and cut radiologists' screen-reading workload by 44%.",
+    "source": "The Lancet Oncology",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/37541274/",
+    "date": "2023-08-02",
+    "tags": ["healthcare", "ai", "radiology", "mammography", "clinical-trial"]
+  },
+  {
+    "id": "cdc-telehealth-early-2020",
+    "statement": "Telehealth visits in the first quarter of 2020 were 50% higher than in the same period of 2019, and 154% higher in the last week of March 2020 than in the same week of 2019, according to data from four large US telehealth providers.",
+    "source": "CDC MMWR",
+    "url": "https://www.cdc.gov/mmwr/volumes/69/wr/mm6943a3.htm",
+    "date": "2020-10-30",
+    "tags": ["healthcare", "telehealth", "pandemic", "digital-health"]
+  },
+  {
+    "id": "mckinsey-telehealth-38x",
+    "statement": "By mid-2021 US telehealth use had stabilized at about 38 times its pre-pandemic level, at 13-17% of office and outpatient visits, down from a peak of about 32% in April 2020. Uptake was highest in psychiatry (50%) and substance use disorder treatment (30%).",
+    "source": "McKinsey & Company",
+    "url": "https://www.mckinsey.com/industries/healthcare/our-insights/telehealth-a-quarter-trillion-dollar-post-covid-19-reality",
+    "date": "2021-07-09",
+    "tags": ["healthcare", "telehealth", "pandemic", "digital-health"]
+  },
+  {
+    "id": "bls-establishment-survival",
+    "statement": "Of US private-sector business establishments opened in March 2013, 79.6% survived their first year, 50.6% were still operating after five years and 34.7% after ten years.",
+    "source": "US Bureau of Labor Statistics",
+    "url": "https://www.bls.gov/opub/ted/2024/34-7-percent-of-business-establishments-born-in-2013-were-still-operating-in-2023.htm",
+    "date": "2024-01-12",
+    "tags": ["startups", "small-business", "survival-rate", "bootstrapping"]
+  },
+  {
+    "id": "mailchimp-bootstrapped-exit",
+    "statement": "Intuit agreed in September 2021 to buy Mailchimp for about $12 billion, the largest sale of a bootstrapped tech company. Mailchimp was founded in 2001, never took venture capital, and had about $800 million in revenue in 2020.",
+    "source": "TechCrunch",
+    "url": "https://techcrunch.com/2021/09/13/intuit-confirms-12b-deal-to-buy-mailchimp",
+    "date": "2021-09-13",
+    "tags": ["startups", "bootstrapping", "acquisition", "saas", "mailchimp"]
+  },
+  {
+    "id": "crunchbase-vc-2025",
+    "statement": "Global venture funding totaled about $425 billion in 2025, up 30% from $328 billion in 2024 and the third-highest year on record after 2021 and 2022. Roughly half of it, about $211 billion, went to AI companies.",
+    "source": "Crunchbase News",
+    "url": "https://news.crunchbase.com/venture/funding-data-third-largest-year-2025/",
+    "date": "2026-01",
+    "tags": ["startups", "venture-capital", "fundraising", "ai"]
+  },
+  {
+    "id": "msr-2024-replan",
+    "statement": "In April 2024 NASA said the existing Mars Sample Return plan was unaffordable: Administrator Bill Nelson said an $11 billion budget was too expensive and a 2040 return date too far away, and NASA asked industry for cheaper, faster proposals.",
+    "source": "AIP FYI",
+    "url": "https://www.aip.org/fyi/nasa-delays-mars-sample-return-plans-seeks-new-ideas",
+    "date": "2024-04-15",
+    "tags": ["space", "nasa", "mars", "mars-sample-return"]
+  },
+  {
+    "id": "msr-2025-two-options",
+    "statement": "In January 2025 NASA said it would study two Mars Sample Return landing architectures, a sky crane design costing $6.6-7.7 billion and a commercial lander costing $5.8-7.1 billion, with a decision expected in 2026 and samples returning as early as 2035.",
+    "source": "NASA",
+    "url": "https://www.nasa.gov/news-release/nasa-to-explore-two-landing-options-for-returning-samples-from-mars/",
+    "date": "2025-01-07",
+    "tags": ["space", "nasa", "mars", "mars-sample-return"]
+  },
+  {
+    "id": "msr-cancelled-fy2026",
+    "statement": "Congress's fiscal 2026 appropriations, enacted in January 2026, declined to fund the existing Mars Sample Return program and instead provided $110 million for a 'Mars Future Missions' line. No approved mission remains to bring Perseverance's samples back to Earth, so no Mars Sample Return launch is scheduled.",
+    "source": "Space.com",
+    "url": "https://www.space.com/astronomy/mars/experts-push-back-against-cancellation-of-nasas-mars-sample-return-project",
+    "date": "2026-01",
+    "tags": ["space", "nasa", "mars", "mars-sample-return", "budget"]
+  },
+  {
+    "id": "btc-ath-2021",
+    "statement": "Bitcoin reached a record of about $69,000 on November 10, 2021. It did not exceed that level again until March 2024.",
+    "source": "BeInCrypto",
+    "url": "https://beincrypto.com/bitcoin-price-hits-all-time-high/",
+    "date": "2024-03",
+    "tags": ["bitcoin", "crypto", "price-history"]
+  },
+  {
+    "id": "btc-100k-2024",
+    "statement": "Bitcoin crossed $100,000 for the first time on December 5, 2024, after rising from about $69,000 on the day of the US presidential election in November 2024.",
+    "source": "Fortune",
+    "url": "https://fortune.com/crypto/2024/12/05/bitcoin-price-100000-btc/",
+    "date": "2024-12-05",
+    "tags": ["bitcoin", "crypto", "price-history"]
+  },
+  {
+    "id": "btc-peak-2025",
+    "statement": "Bitcoin's highest price in 2025, and its all-time high, was just over $126,000 in early October 2025. It never reached $200,000, fell to about $107,000 within days of the peak, and ended 2025 lower than it started.",
+    "source": "CoinDesk",
+    "url": "https://www.coindesk.com/markets/2025/12/23/bitcoin-s-october-peak-was-over-usd126k-but-inflation-adjusted-price-never-hit-usd100k",
+    "date": "2025-12-23",
+    "tags": ["bitcoin", "crypto", "price-history", "prediction"]
+  },
+  {
+    "id": "btc-sept-2026",
+    "statement": "In September 2026 bitcoin traded around $86,000, its highest level since January 2026 and still well below its October 2025 record of about $126,000.",
+    "source": "CNBC",
+    "url": "https://www.cnbc.com/2026/09/21/bitcoin-price-crypto-rally.html",
+    "date": "2026-09-21",
+    "tags": ["bitcoin", "crypto", "price-history"]
+  }
+]
