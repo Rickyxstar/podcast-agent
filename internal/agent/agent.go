@@ -21,6 +21,7 @@ import (
 	"github.com/Rickyxstar/podcast-agent/internal/llm"
 	"github.com/Rickyxstar/podcast-agent/internal/report"
 	"github.com/Rickyxstar/podcast-agent/internal/search"
+	"github.com/Rickyxstar/podcast-agent/internal/trace"
 	"github.com/Rickyxstar/podcast-agent/internal/transcript"
 )
 
@@ -90,7 +91,8 @@ func New(p llm.Provider, searches []search.Provider, cfg Config) *Agent {
 	return &Agent{llm: p, searches: searches, cfg: cfg}
 }
 
-// Run produces the report for ep.
+// Run produces the report for ep. Its trace events go to the Sink in ctx,
+// if any; see trace.WithSink.
 //
 // A fact-check failure still returns a report, with FactCheck.Status set to
 // partial or failed and the error in Run.Warnings. A summary failure returns
@@ -102,9 +104,10 @@ func (a *Agent) Run(ctx context.Context, ep *transcript.Episode) (*report.Report
 		Agent:   a,
 		ep:      ep,
 		traceID: newTraceID(),
+		sink:    trace.FromContext(ctx),
 	}
 	j.log = a.cfg.Logger.With("trace_id", j.traceID, "episode", ep.EpisodeID)
-	j.ingest()
+	j.ingest(ctx)
 
 	var (
 		wg                sync.WaitGroup
@@ -172,6 +175,8 @@ type job struct {
 	ep      *transcript.Episode
 	traceID string
 	log     *slog.Logger
+	// sink receives trace events. Nil drops them.
+	sink trace.Sink
 	// lines is the transcript rendered for prompts, set by ingest.
 	lines string
 
@@ -188,13 +193,20 @@ func (j *job) warnf(format string, args ...any) {
 	j.mu.Unlock()
 }
 
-// emit logs a trace event: plan, llm_call, tool_call, tool_result, verdict,
-// validation or done. These logs are the agent-reasoning deliverable.
-//
-// TODO: route through internal/trace so events also land in trace.jsonl and
-// the --pretty console view.
+// emit logs a trace event (ingest, plan, claim, llm_call, tool_call,
+// tool_result, verdict, validation or done) and sends it to the job's
+// trace sink. These events are the agent-reasoning deliverable.
 func (j *job) emit(ctx context.Context, event string, attrs ...slog.Attr) {
 	j.log.LogAttrs(ctx, slog.LevelInfo, event, attrs...)
+	if j.sink != nil {
+		j.sink.Emit(trace.Event{
+			Time:    j.cfg.Now(),
+			TraceID: j.traceID,
+			Episode: j.ep.EpisodeID,
+			Type:    event,
+			Attrs:   attrs,
+		})
+	}
 }
 
 // Stop reasons that leave a response unusable.

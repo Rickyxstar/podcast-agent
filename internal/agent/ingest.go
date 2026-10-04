@@ -1,7 +1,9 @@
 package agent
 
 import (
+	"context"
 	"fmt"
+	"log/slog"
 	"strings"
 )
 
@@ -15,7 +17,7 @@ import (
 // Rivera (guest)", stripping honorifics), warning on unknown speakers.
 // TODO: strip filler words and stutters from the text sent to the model,
 // keeping the raw text for quote validation.
-func (j *job) ingest() {
+func (j *job) ingest(ctx context.Context) {
 	var b strings.Builder
 	if j.ep.Title != "" {
 		fmt.Fprintf(&b, "Title: %s\n", j.ep.Title)
@@ -39,6 +41,10 @@ func (j *job) ingest() {
 		fmt.Fprintf(&b, ": %s\n", s.Text)
 	}
 	j.lines = b.String()
+	j.emit(ctx, "ingest",
+		slog.Int("segments", len(j.ep.Transcript)),
+		slog.String("duration", j.duration()),
+	)
 }
 
 // duration is the last segment's timestamp as written in the source.

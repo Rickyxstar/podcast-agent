@@ -26,7 +26,7 @@ func newTestJob(t *testing.T, p llm.Provider, cfg Config, searches ...search.Pro
 		a.searches = searches
 	}
 	j := &job{Agent: a, ep: testEpisode, traceID: "test", log: a.cfg.Logger}
-	j.ingest()
+	j.ingest(t.Context())
 	return j
 }
 

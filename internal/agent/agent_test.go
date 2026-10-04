@@ -17,6 +17,7 @@ import (
 	"github.com/Rickyxstar/podcast-agent/internal/report"
 	"github.com/Rickyxstar/podcast-agent/internal/search"
 	"github.com/Rickyxstar/podcast-agent/internal/search/kb"
+	"github.com/Rickyxstar/podcast-agent/internal/trace"
 	"github.com/Rickyxstar/podcast-agent/internal/transcript"
 )
 
@@ -133,9 +134,24 @@ func TestRun(t *testing.T) {
 		Return(toolUse(call("t3", "submit_verdict", `{"claim_id": "c1", "verdict": "verified",
 			"evidence": [{"result_id": "gitlab-all-remote", "stance": "supports"}],
 			"reasoning": "The GitLab Handbook says so.", "self_rating": 0.8}`)), nil).Once()
-	rep, err := newTestAgent(t, p, Config{}).Run(context.Background(), testEpisode)
+	var rec trace.Recorder
+	rep, err := newTestAgent(t, p, Config{}).Run(trace.WithSink(context.Background(), &rec), testEpisode)
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	counts := map[string]int{}
+	for _, e := range rec.Events() {
+		counts[e.Type]++
+		if e.TraceID != rep.Run.TraceID || e.Episode != testEpisode.EpisodeID {
+			t.Errorf("%s event has trace %q episode %q, want %q %q", e.Type, e.TraceID, e.Episode, rep.Run.TraceID, testEpisode.EpisodeID)
+		}
+	}
+	// summary + plan + 3 loop calls; the rejected verdict emits no verdict event.
+	for typ, n := range map[string]int{"ingest": 1, "plan": 1, "llm_call": 5, "tool_call": 3, "tool_result": 3, "verdict": 1, "validation": 1, "done": 1} {
+		if counts[typ] != n {
+			t.Errorf("%d %s events, want %d", counts[typ], typ, n)
+		}
 	}
 
 	if rep.Episode.Duration != "02:10" {
