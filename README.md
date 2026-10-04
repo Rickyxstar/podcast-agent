@@ -29,16 +29,24 @@ It's written in Go and calls Claude through the Anthropic API by default; OpenAI
 
 ## Quickstart (Docker)
 
-You need Docker and an [Anthropic API key](https://console.anthropic.com/). There's no offline mock mode; to run without a key, use a [local model through Ollama](#local-model-ollama-no-api-key).
+You need Docker, an [Anthropic API key](https://console.anthropic.com/) and a [Brave Search API key](https://brave.com/search/api/) for live web search. There's no offline mock mode; to run without a key, use a [local model through Ollama](#local-model-ollama-no-api-key).
 
 ```bash
 git clone https://github.com/Rickyxstar/podcast-agent.git
 cd podcast-agent
 docker build -t podcast-agent .
 
-export ANTHROPIC_API_KEY=sk-ant-...
+cp .env.example .env            # then fill in ANTHROPIC_API_KEY and BRAVE_API_KEY
 mkdir -p out
-docker run --rm -e ANTHROPIC_API_KEY -v "$PWD/out:/out" \
+docker run --rm --env-file .env -v "$PWD/out:/out" \
+  podcast-agent run samples/ep001_remote_work.json --out /out --pretty
+```
+
+Or, without a `.env` file:
+
+```bash
+export ANTHROPIC_API_KEY=sk-ant-... BRAVE_API_KEY=...
+docker run --rm -e ANTHROPIC_API_KEY -e BRAVE_API_KEY -e SEARCH_PROVIDER=brave -v "$PWD/out:/out" \
   podcast-agent run samples/ep001_remote_work.json --out /out --pretty
 ```
 
@@ -55,7 +63,7 @@ Notes:
 - The three sample transcripts are built into the image under `samples/`. To process your own file, mount it, e.g. `-v "$PWD/my-episode.txt:/in/ep.txt:ro"` and then `run /in/ep.txt`.
 - Without `--pretty`, the report is printed as JSON and the trace goes to normal log lines.
 - **On Linux**, the container runs as uid 65532. If it can't write to `out/`, add `--user "$(id -u):$(id -g)"`.
-- To search the live web instead of the bundled knowledge base, add `-e SEARCH_PROVIDER=brave -e BRAVE_API_KEY=...` (key from the [Brave Search API](https://brave.com/search/api/)).
+- Without a Brave key, set `SEARCH_PROVIDER=kb` (or drop the two Brave flags) and claims are checked against the bundled knowledge base instead of the live web.
 
 ## How it works
 
@@ -231,7 +239,7 @@ Each setting can be given as a flag or an environment variable. `podcast-agent -
 Requires Go 1.27+.
 
 ```bash
-export ANTHROPIC_API_KEY=sk-ant-...
+set -a; . ./.env; set +a        # or: export ANTHROPIC_API_KEY=sk-ant-... BRAVE_API_KEY=... SEARCH_PROVIDER=brave
 go run ./cmd/podcast-agent run samples/ep002_ai_healthcare.json --pretty
 # → results/ep002/{report.json,report.md,trace.jsonl}
 ```
@@ -261,7 +269,7 @@ Bedrock currently fails with Claude Opus 5.5 because it doesn't accept structure
 `docker compose` starts LocalStack (S3 + SQS, set up by [`deploy/localstack/init.sh`](deploy/localstack/init.sh) the same way as the Terraform) and the worker. Uploading a transcript to `incoming/` triggers it, exactly as on AWS. The LLM is still a real provider.
 
 ```bash
-export ANTHROPIC_API_KEY=sk-ant-...
+cp .env.example .env                            # fill in the keys; compose reads .env itself
 make local-up                                   # start LocalStack + worker
 make demo-local                                 # upload ep001, wait, print the report from S3
 make demo-local SAMPLE=ep003_bootstrapping.json
