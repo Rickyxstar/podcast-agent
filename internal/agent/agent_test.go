@@ -77,12 +77,12 @@ func goodNotes(t *testing.T) string {
 		Summary:   strings.Repeat("word ", 250),
 		Takeaways: []string{"a", "b", "c", "d", "e"},
 		Quotes: []noteQuote{
-			// The straight dash differs from the transcript and the
-			// timestamp is wrong; check should fix both.
+			// The straight dash differs from the transcript, which still
+			// matches, and the timestamp is wrong; check should fix it.
 			{Text: "GitLab has been all-remote since day one - no offices at all.", Speaker: "Mark", Timestamp: "09:99"},
 			{Text: "Welcome back.", Speaker: "Sarah", Timestamp: "00:00"},
-			// A dropped hyphen and the wrong speaker: a fuzzy match.
-			{Text: "At my last startup we hit breakeven in 18 months.", Speaker: "Sarah", Timestamp: "02:10"},
+			// The wrong speaker; check should fix it.
+			{Text: "At my last startup we hit break-even in 18 months.", Speaker: "Sarah", Timestamp: "02:10"},
 		},
 		Topics: []string{"remote-work", "Async Culture", "bootstrapping"},
 	})
@@ -169,7 +169,7 @@ func TestRun(t *testing.T) {
 		t.Errorf("Duration = %q, want 02:10", rep.Episode.Duration)
 	}
 	wantQuotes := []report.Quote{
-		{Text: "GitLab has been all-remote since day one — no offices at all.", Speaker: "Mark", Timestamp: "01:20"},
+		{Text: "GitLab has been all-remote since day one - no offices at all.", Speaker: "Mark", Timestamp: "01:20"},
 		{Text: "Welcome back.", Speaker: "Sarah", Timestamp: "00:00"},
 		{Text: "At my last startup we hit break-even in 18 months.", Speaker: "Mark", Timestamp: "02:10"},
 	}

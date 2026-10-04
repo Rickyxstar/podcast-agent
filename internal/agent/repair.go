@@ -79,11 +79,11 @@ func (c *checked) repairPrompt(fields []string) string {
 			switch {
 			case q.duplicate:
 				fmt.Fprintf(&b, "- %q repeats another quote.\n", q.text)
-			case q.closest.score == 0:
+			case q.closest == nil:
 				fmt.Fprintf(&b, "- %q was not found in the transcript.\n", q.text)
 			default:
 				fmt.Fprintf(&b, "- %q was not found in the transcript. The closest line is [%s] %s: %q\n",
-					q.text, q.closest.seg.Timestamp, q.closest.seg.Speaker, q.closest.seg.Text)
+					q.text, q.closest.Timestamp, q.closest.Speaker, q.closest.Text)
 			}
 		}
 		if len(c.notes.Quotes) > 0 {

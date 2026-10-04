@@ -20,17 +20,12 @@ const (
 	maxQuotes       = 5
 	minTopics       = 3
 	maxTopics       = 8
-	// minQuoteScore is how close a quote must be to some stretch of a
-	// transcript line to count as said: 1 is an exact match after folding,
-	// 0.9 allows one edit in ten characters.
-	minQuoteScore = 0.9
 )
 
 // checked is the result of checking the summary stage's output in code.
 type checked struct {
-	// notes is the output with only its verified quotes, each copied from
-	// the transcript as said with that line's speaker and timestamp, and
-	// with topics in kebab-case.
+	// notes is the output with only its verified quotes, each with its
+	// line's speaker and timestamp, and with topics in kebab-case.
 	notes notes
 	// failed are the quotes left out of notes.
 	failed []failedQuote
@@ -44,9 +39,10 @@ type checked struct {
 type failedQuote struct {
 	text string
 	// duplicate is set when the quote repeats an earlier one; otherwise it
-	// wasn't found in the transcript, and closest is its best match.
+	// wasn't found in the transcript, and closest is the line nearest to
+	// it, if any.
 	duplicate bool
-	closest   quoteMatch
+	closest   *transcript.Segment
 }
 
 // String describes q for warnings and for the repair prompt.
@@ -54,11 +50,10 @@ func (q failedQuote) String() string {
 	if q.duplicate {
 		return fmt.Sprintf("%q repeats another quote", q.text)
 	}
-	if q.closest.score == 0 {
+	if q.closest == nil {
 		return fmt.Sprintf("%q was not found in the transcript", q.text)
 	}
-	return fmt.Sprintf("%q was not found in the transcript (closest match %.2f at %s)",
-		q.text, q.closest.score, q.closest.seg.Timestamp)
+	return fmt.Sprintf("%q was not found in the transcript (closest line at %s)", q.text, q.closest.Timestamp)
 }
 
 // issue is a limit the output doesn't meet.
@@ -81,22 +76,24 @@ func (j *job) check(n *notes) checked {
 	c := checked{notes: *n}
 	c.notes.Quotes = make([]noteQuote, 0, min(len(n.Quotes), maxQuotes))
 	type span struct {
-		seg  int
-		text string
+		seg   int
+		words string
 	}
 	seen := map[span]bool{}
 	for _, q := range n.Quotes {
 		m, ok := j.matchQuote(q.Text)
+		key := span{m.index, strings.Join(words(q.Text), " ")}
 		switch {
 		case !ok:
-			c.failed = append(c.failed, failedQuote{text: q.Text, closest: m})
-		case seen[span{m.index, m.text}]:
+			c.failed = append(c.failed, failedQuote{text: q.Text, closest: j.closestLine(q.Text)})
+		case seen[key]:
 			c.failed = append(c.failed, failedQuote{text: q.Text, duplicate: true})
 		case len(c.notes.Quotes) < maxQuotes:
-			// Trust the transcript over the model for the words, the
-			// speaker and the timestamp. Quotes past maxQuotes are left out.
-			seen[span{m.index, m.text}] = true
-			c.notes.Quotes = append(c.notes.Quotes, noteQuote{Text: m.text, Speaker: m.seg.Speaker, Timestamp: m.seg.Timestamp})
+			// Trust the transcript over the model for the speaker and the
+			// timestamp. Quotes past maxQuotes are left out.
+			seen[key] = true
+			text := strings.Join(strings.Fields(strings.Trim(q.Text, ` "'“”‘’`)), " ")
+			c.notes.Quotes = append(c.notes.Quotes, noteQuote{Text: text, Speaker: m.seg.Speaker, Timestamp: m.seg.Timestamp})
 		}
 	}
 	have := len(c.notes.Quotes)
@@ -168,151 +165,64 @@ func topicsProblem(t []string) string {
 func tidyTopics(topics []string) []string {
 	tidy := make([]string, 0, len(topics))
 	for _, t := range topics {
-		words := strings.FieldsFunc(strings.ToLower(t), func(r rune) bool {
-			return !unicode.IsLetter(r) && !unicode.IsDigit(r)
-		})
-		if t := strings.Join(words, "-"); t != "" && !slices.Contains(tidy, t) {
+		if t := strings.Join(words(t), "-"); t != "" && !slices.Contains(tidy, t) {
 			tidy = append(tidy, t)
 		}
 	}
 	return tidy
 }
 
-// quoteMatch is the stretch of a transcript line closest to a quote.
+// quoteMatch is the transcript line a quote was found in.
 type quoteMatch struct {
 	seg   transcript.Segment
 	index int // of seg in the transcript
-	// text is the matching stretch of seg.Text as said, widened to whole
-	// words.
-	text string
-	// score is 1 minus the edit distance per character of the quote,
-	// floored at 0, after folding both sides.
-	score float64
 }
 
-// matchQuote returns the transcript stretch closest to quote, ignoring
-// case, whitespace and typographic quote and dash styles, and reports
-// whether it is close enough to count as said. Ties go to the earliest
-// segment.
+// matchQuote returns the first transcript line that contains quote as a
+// run of whole words, ignoring case, whitespace and punctuation, so
+// typographic quote and dash styles don't matter.
 func (j *job) matchQuote(quote string) (quoteMatch, bool) {
-	q := fold(strings.Trim(quote, ` "'“”‘’`))
-	if len(q.runes) == 0 {
+	q := words(quote)
+	if len(q) == 0 {
 		return quoteMatch{}, false
 	}
-	var best quoteMatch
+	want := " " + strings.Join(q, " ") + " "
 	for i, s := range j.ep.Transcript {
-		f := fold(s.Text)
-		start, end, dist := closest(q.runes, f.runes)
-		score := max(0, 1-float64(dist)/float64(len(q.runes)))
-		if score <= best.score {
-			continue
-		}
-		best = quoteMatch{seg: s, index: i, text: f.source(start, end), score: score}
-		if score == 1 {
-			break
+		if strings.Contains(" "+strings.Join(words(s.Text), " ")+" ", want) {
+			return quoteMatch{seg: s, index: i}, true
 		}
 	}
-	return best, best.score >= minQuoteScore
+	return quoteMatch{}, false
 }
 
-// folded is text folded for quote matching, keeping where each rune came
-// from so a match can be copied from the original.
-type folded struct {
-	src   []rune
-	runes []rune
-	pos   []int // pos[i] is the index in src of runes[i]
-}
-
-// fold lowercases s, collapses its whitespace, and maps typographic quotes,
-// dashes and ellipses to plain ASCII.
-func fold(s string) folded {
-	f := folded{src: []rune(s)}
-	space := -1 // index of the pending run of whitespace, if any
-	for i, r := range f.src {
-		if unicode.IsSpace(r) {
-			if space < 0 {
-				space = i
-			}
-			continue
-		}
-		if space >= 0 && len(f.runes) > 0 {
-			f.add(space, ' ')
-		}
-		space = -1
-		switch r {
-		case '‘', '’':
-			f.add(i, '\'')
-		case '“', '”':
-			f.add(i, '"')
-		case '–', '—':
-			f.add(i, '-')
-		case '…':
-			f.add(i, '.', '.', '.')
-		default:
-			f.add(i, unicode.ToLower(r))
-		}
-	}
-	return f
-}
-
-func (f *folded) add(pos int, rs ...rune) {
-	for _, r := range rs {
-		f.runes = append(f.runes, r)
-		f.pos = append(f.pos, pos)
-	}
-}
-
-// source returns the original text of runes[start:end], widened so it
-// doesn't cut a word in half.
-func (f *folded) source(start, end int) string {
-	if start >= end {
-		return ""
-	}
-	from, to := f.pos[start], f.pos[end-1]+1
-	word := func(r rune) bool { return unicode.IsLetter(r) || unicode.IsDigit(r) }
-	for from > 0 && word(f.src[from-1]) && word(f.src[from]) {
-		from--
-	}
-	for to < len(f.src) && word(f.src[to-1]) && word(f.src[to]) {
-		to++
-	}
-	return string(f.src[from:to])
-}
-
-// closest finds the stretch text[start:end] with the smallest edit distance
-// to q, and returns it with that distance. It is Levenshtein distance with
-// a free start and end in text (Sellers' algorithm), O(len(q)·len(text)).
-func closest(q, text []rune) (start, end, dist int) {
-	// prev and cur are rows of the distance table; their *From twins hold
-	// where in text each cell's best stretch starts.
-	prev, cur := make([]int, len(text)+1), make([]int, len(text)+1)
-	prevFrom, curFrom := make([]int, len(text)+1), make([]int, len(text)+1)
-	for j := range prevFrom {
-		prevFrom[j] = j
-	}
-	for i := 1; i <= len(q); i++ {
-		cur[0], curFrom[0] = i, 0
-		for j := 1; j <= len(text); j++ {
-			sub := prev[j-1]
-			if q[i-1] != text[j-1] {
-				sub++
-			}
-			cur[j], curFrom[j] = sub, prevFrom[j-1]
-			if d := prev[j] + 1; d < cur[j] { // skip a rune of q
-				cur[j], curFrom[j] = d, prevFrom[j]
-			}
-			if d := cur[j-1] + 1; d < cur[j] { // skip a rune of text
-				cur[j], curFrom[j] = d, curFrom[j-1]
+// closestLine returns the transcript line sharing the most words with
+// quote, as a hint for fixing it, or nil if none shares at least half of
+// them. Ties go to the earliest line.
+func (j *job) closestLine(quote string) *transcript.Segment {
+	q := words(quote)
+	var best *transcript.Segment
+	most := 0
+	for i, s := range j.ep.Transcript {
+		line := words(s.Text)
+		n := 0
+		for _, w := range q {
+			if slices.Contains(line, w) {
+				n++
 			}
 		}
-		prev, cur = cur, prev
-		prevFrom, curFrom = curFrom, prevFrom
-	}
-	end = 0
-	for j := 1; j <= len(text); j++ {
-		if prev[j] < prev[end] {
-			end = j
+		if n > most {
+			best, most = &j.ep.Transcript[i], n
 		}
 	}
-	return prevFrom[end], end, prev[end]
+	if 2*most < len(q) {
+		return nil
+	}
+	return best
+}
+
+// words splits s into lowercase runs of letters and digits.
+func words(s string) []string {
+	return strings.FieldsFunc(strings.ToLower(s), func(r rune) bool {
+		return !unicode.IsLetter(r) && !unicode.IsDigit(r)
+	})
 }
