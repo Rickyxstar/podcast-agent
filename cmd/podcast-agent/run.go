@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/Rickyxstar/podcast-agent/internal/agent"
+	llmfactory "github.com/Rickyxstar/podcast-agent/internal/llm/factory"
 	"github.com/Rickyxstar/podcast-agent/internal/report"
 	"github.com/Rickyxstar/podcast-agent/internal/search"
 	"github.com/Rickyxstar/podcast-agent/internal/storage"
@@ -43,9 +44,12 @@ func newRunCmd(cfg *config) *cobra.Command {
 				"storage", d.storage.Name(),
 			)
 
-			// TODO: set agent.Config.Price from a per-model price table so
-			// reports carry cost.
-			a := agent.New(d.llm, []search.Provider{d.search}, agent.Config{})
+			model := llmfactory.Model(cfg.LLM)
+			price, ok := agent.PriceFor(model)
+			if !ok {
+				slog.Info("no price for model; report cost will be 0", "model", model)
+			}
+			a := agent.New(d.llm, []search.Provider{d.search}, agent.Config{Price: price})
 			rep, err := a.Run(ctx, ep)
 			if err != nil {
 				return err

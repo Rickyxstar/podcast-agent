@@ -39,6 +39,24 @@ type Config struct {
 	OllamaHost string
 }
 
+// Model returns the model New would configure for cfg: cfg.Model, or the
+// provider's default. It returns "" for an unknown provider.
+func Model(cfg Config) string {
+	if cfg.Model != "" {
+		return cfg.Model
+	}
+	switch strings.ToLower(strings.TrimSpace(cfg.Provider)) {
+	case "", Anthropic:
+		return anthropic.DefaultModel
+	case Bedrock:
+		return bedrock.DefaultModel
+	case Ollama:
+		return ollama.DefaultModel
+	default:
+		return ""
+	}
+}
+
 // New returns the provider named by cfg.Provider.
 func New(ctx context.Context, cfg Config) (llm.Provider, error) {
 	switch name := strings.ToLower(strings.TrimSpace(cfg.Provider)); name {

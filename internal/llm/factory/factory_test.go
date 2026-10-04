@@ -71,3 +71,21 @@ func TestNewUnknown(t *testing.T) {
 		t.Errorf("err = %v, want ErrUnknownProvider", err)
 	}
 }
+
+func TestModel(t *testing.T) {
+	tests := []struct {
+		cfg  Config
+		want string
+	}{
+		{Config{}, anthropic.DefaultModel},
+		{Config{Provider: "anthropic", Model: "claude-sonnet-5-5"}, "claude-sonnet-5-5"},
+		{Config{Provider: " Bedrock "}, bedrock.DefaultModel},
+		{Config{Provider: "ollama"}, ollama.DefaultModel},
+		{Config{Provider: "openai"}, ""},
+	}
+	for _, tt := range tests {
+		if got := Model(tt.cfg); got != tt.want {
+			t.Errorf("Model(%+v) = %q, want %q", tt.cfg, got, tt.want)
+		}
+	}
+}
