@@ -20,14 +20,12 @@
     {
       "text": "If it isn't written down, it didn't happen.",
       "speaker": "Mark Rivera",
-      "timestamp": "04:10",
-      "verified": true
+      "timestamp": "04:10"
     },
     {
       "text": "Offices were never about productivity.",
       "speaker": "Sarah Chen",
-      "timestamp": "05:02",
-      "verified": false
+      "timestamp": "05:02"
     }
   ],
   "topics": [
@@ -113,7 +111,7 @@
     "duration_ms": 18250,
     "trace_id": "tr-123",
     "warnings": [
-      "quote q2 not found verbatim in transcript"
+      "dropped quote not found in transcript: \"Offices were never optional.\""
     ]
   }
 }

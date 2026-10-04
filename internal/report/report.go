@@ -25,14 +25,13 @@ type Episode struct {
 	Duration string `json:"duration"`
 }
 
-// Quote is a notable line from the transcript.
+// Quote is a notable line from the transcript. Text is copied exactly as
+// said; quotes the agent couldn't find in the transcript are left out.
 type Quote struct {
 	Text    string `json:"text"`
 	Speaker string `json:"speaker"`
 	// Timestamp is the segment timestamp the quote came from, e.g. "04:10".
 	Timestamp string `json:"timestamp"`
-	// Verified reports whether Text was found verbatim in the transcript.
-	Verified bool `json:"verified"`
 }
 
 // FactCheck is the outcome of the fact-check stage.

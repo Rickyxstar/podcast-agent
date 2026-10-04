@@ -74,7 +74,22 @@ func TestPretty(t *testing.T) {
 			"✅ c1 verified (confidence 0.97): The handbook says so.",
 		},
 		// Missing attributes render as zero instead of panicking.
-		{event("validation"), "🧪 Validation: 0 of 0 quotes found verbatim, 0 takeaways, 0-word summary"},
+		{event("validation"), "🧪 Validation: 0 of 0 quotes found in transcript, 0 takeaways, 0-word summary"},
+		{
+			event("validation", slog.Int("quotes", 5), slog.Int("quotes_verified", 4), slog.Int("takeaways", 5),
+				slog.Int("summary_words", 184), slog.Int("problems", 2)),
+			"🧪 Validation: 4 of 5 quotes found in transcript, 5 takeaways, 184-word summary → 2 problems",
+		},
+		{
+			event("repair", slog.Int("quotes_requested", 2), slog.Int("quotes_accepted", 1), slog.Int("quotes_rejected", 1),
+				slog.String("fields", "summary,topics"), slog.Int("fixes_requested", 2), slog.Int("fixes_accepted", 2)),
+			"🔧 Repair: asked for 2 new quotes + fixes to summary, topics → 1 of 2 quotes accepted, 2 of 2 fixes accepted",
+		},
+		{
+			event("repair", slog.String("fields", "summary"), slog.Int("fixes_requested", 1), slog.Int("fixes_accepted", 0)),
+			"🔧 Repair: asked for fixes to summary → 0 of 1 fixes accepted",
+		},
+		{event("repair", slog.String("error", "model refused")), "🔧 Repair failed: model refused"},
 		{event("custom", slog.Int("n", 1)), "• custom n=1"},
 	}
 	for _, tt := range tests {

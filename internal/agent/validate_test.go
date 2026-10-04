@@ -1,116 +1,177 @@
 package agent
 
 import (
-	"context"
 	"fmt"
+	"slices"
 	"strings"
 	"testing"
-
-	"github.com/Rickyxstar/podcast-agent/internal/report"
 )
 
-// validNotes returns notes that pass every check in validate.
+// validNotes returns notes that pass every check.
 func validNotes() *notes {
 	return &notes{
 		Summary:   strings.Repeat("word ", 250),
 		Takeaways: []string{"a", "b", "c", "d", "e"},
-		Quotes:    []noteQuote{{Text: "hit break-even in 18 months", Speaker: "Mark", Timestamp: "02:10"}},
-		Topics:    []string{"remote-work", "async", "web3", "covid-19"},
+		Quotes: []noteQuote{
+			{Text: "Welcome back.", Speaker: "Sarah", Timestamp: "00:00"},
+			{Text: "GitLab has been all-remote since day one — no offices at all.", Speaker: "Mark", Timestamp: "01:20"},
+			{Text: "At my last startup we hit break-even in 18 months.", Speaker: "Mark", Timestamp: "02:10"},
+		},
+		Topics: []string{"remote-work", "async", "covid-19"},
 	}
 }
 
-func TestValidateQuotes(t *testing.T) {
-	j := newTestJob(t, newMockLLM(t), Config{})
-	n := validNotes()
-	n.Quotes = []noteQuote{
-		// Straight dash differs from the transcript, and the model got the
-		// speaker and timestamp wrong; the transcript should win.
-		{Text: "GitLab has been all-remote since day one - no offices at all.", Speaker: "Sarah", Timestamp: "09:99"},
-		{Text: "Something nobody said.", Speaker: "Sarah", Timestamp: "00:00"},
-		{Text: "Welcome back.", Speaker: "Sarah", Timestamp: "00:00"},
+// quotes returns notes quotes with the given texts and made-up attribution.
+func quotes(texts ...string) []noteQuote {
+	qs := make([]noteQuote, len(texts))
+	for i, t := range texts {
+		qs[i] = noteQuote{Text: t, Speaker: "Nobody", Timestamp: "99:99"}
 	}
-
-	got := j.validate(context.Background(), n)
-
-	want := []report.Quote{
-		{Text: n.Quotes[0].Text, Speaker: "Mark", Timestamp: "01:20", Verified: true},
-		{Text: "Something nobody said.", Speaker: "Sarah", Timestamp: "00:00"},
-		{Text: "Welcome back.", Speaker: "Sarah", Timestamp: "00:00", Verified: true},
-	}
-	if len(got) != len(want) {
-		t.Fatalf("got %d quotes, want %d", len(got), len(want))
-	}
-	for i := range want {
-		if got[i] != want[i] {
-			t.Errorf("quote %d = %+v, want %+v", i, got[i], want[i])
-		}
-	}
-	if len(j.warnings) != 1 || !containsPrefix(j.warnings, `quote not found verbatim in transcript: "Something nobody said."`) {
-		t.Errorf("warnings = %q, want only the missing quote", j.warnings)
-	}
+	return qs
 }
 
-func TestValidateNoQuotes(t *testing.T) {
+func TestCheckValid(t *testing.T) {
 	j := newTestJob(t, newMockLLM(t), Config{})
 	n := validNotes()
-	n.Quotes = nil
-	if got := j.validate(context.Background(), n); got == nil || len(got) != 0 {
-		t.Errorf("quotes = %#v, want empty non-nil slice", got)
+	c := j.check(n)
+	if c.needsRepair() || len(c.failed) != 0 || len(c.issues) != 0 {
+		t.Errorf("check = %+v, want no problems", c)
 	}
+	if !slices.Equal(c.notes.Quotes, n.Quotes) {
+		t.Errorf("quotes = %+v, want %+v", c.notes.Quotes, n.Quotes)
+	}
+	j.finish(c)
 	if len(j.warnings) != 0 {
 		t.Errorf("warnings = %q, want none", j.warnings)
 	}
 }
 
-func TestValidateLimits(t *testing.T) {
+func TestCheckQuotes(t *testing.T) {
+	j := newTestJob(t, newMockLLM(t), Config{})
+	n := validNotes()
+	n.Quotes = []noteQuote{
+		// The straight dash differs from the transcript, and the model got
+		// the speaker and timestamp wrong; the transcript should win.
+		{Text: "GitLab has been all-remote since day one - no offices at all.", Speaker: "Sarah", Timestamp: "09:99"},
+		// One edit away: a fuzzy match, copied as said.
+		{Text: "At my last startup we hit breakeven in 18 months.", Speaker: "Sarah", Timestamp: "02:10"},
+		{Text: "Something nobody said.", Speaker: "Sarah", Timestamp: "00:00"},
+		{Text: "“Welcome back.”", Speaker: "Sarah", Timestamp: "00:00"},
+		{Text: "welcome  back.", Speaker: "Sarah", Timestamp: "00:00"},
+	}
+
+	c := j.check(n)
+
+	want := []noteQuote{
+		{Text: "GitLab has been all-remote since day one — no offices at all.", Speaker: "Mark", Timestamp: "01:20"},
+		{Text: "At my last startup we hit break-even in 18 months.", Speaker: "Mark", Timestamp: "02:10"},
+		{Text: "Welcome back.", Speaker: "Sarah", Timestamp: "00:00"},
+	}
+	if !slices.Equal(c.notes.Quotes, want) {
+		t.Errorf("quotes = %+v, want %+v", c.notes.Quotes, want)
+	}
+	if len(c.failed) != 2 {
+		t.Fatalf("failed = %+v, want 2", c.failed)
+	}
+	if f := c.failed[0]; f.text != "Something nobody said." || f.duplicate || f.closest.score >= minQuoteScore {
+		t.Errorf("failed[0] = %+v, want not found", f)
+	}
+	if f := c.failed[1]; f.text != "welcome  back." || !f.duplicate {
+		t.Errorf("failed[1] = %+v, want a duplicate", f)
+	}
+	if c.missing != 2 || !c.needsRepair() {
+		t.Errorf("missing = %d, needsRepair = %v; want 2, true", c.missing, c.needsRepair())
+	}
+}
+
+func TestCheckMissing(t *testing.T) {
+	// Distinct stretches of testEpisode.
+	said := []string{
+		"Welcome back.",
+		"Today we’re diving into remote work.",
+		"GitLab has been all-remote",
+		"no offices at all.",
+		"At my last startup",
+		"hit break-even in 18 months.",
+	}
+	bad := []string{"Never said.", "Also never said.", "Not this either.", "Nor this."}
+	tests := []struct {
+		name         string
+		quotes       []string
+		kept, failed int
+		missing      int
+	}{
+		{"enough", said[:3], 3, 0, 0},
+		{"too few", said[:1], 1, 0, 2},
+		{"none", nil, 0, 0, 3},
+		{"replace one", append(slices.Clone(said[:4]), bad[0]), 4, 1, 1},
+		{"replace and top up", append(slices.Clone(said[:1]), bad[0]), 1, 1, 2},
+		{"all bad", bad, 0, 4, 4},
+		{"full", append(slices.Clone(said[:5]), bad[0]), 5, 1, 0},
+		{"too many", said, 5, 0, 0},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			j := newTestJob(t, newMockLLM(t), Config{})
+			n := validNotes()
+			n.Quotes = quotes(tt.quotes...)
+			c := j.check(n)
+			if len(c.notes.Quotes) != tt.kept || len(c.failed) != tt.failed || c.missing != tt.missing {
+				t.Errorf("kept %d, failed %d, missing %d; want %d, %d, %d",
+					len(c.notes.Quotes), len(c.failed), c.missing, tt.kept, tt.failed, tt.missing)
+			}
+		})
+	}
+}
+
+func TestCheckLimits(t *testing.T) {
 	words := func(n int) string { return strings.Repeat("word ", n) }
 	tests := []struct {
-		name  string
-		edit  func(*notes)
-		warns []string
+		name   string
+		edit   func(*notes)
+		issues []string
 	}{
 		{name: "valid", edit: func(*notes) {}},
 		{name: "minimum summary", edit: func(n *notes) { n.Summary = words(minSummaryWords) }},
 		{name: "maximum summary", edit: func(n *notes) { n.Summary = words(maxSummaryWords) }},
 		{
-			name:  "short summary",
-			edit:  func(n *notes) { n.Summary = words(minSummaryWords - 1) },
-			warns: []string{"summary is 199 words, want 200-300"},
+			name:   "short summary",
+			edit:   func(n *notes) { n.Summary = words(minSummaryWords - 1) },
+			issues: []string{"summary: summary is 199 words, want 200-300"},
 		},
 		{
-			name:  "long summary",
-			edit:  func(n *notes) { n.Summary = words(maxSummaryWords + 1) },
-			warns: []string{"summary is 301 words, want 200-300"},
+			name:   "long summary",
+			edit:   func(n *notes) { n.Summary = words(maxSummaryWords + 1) },
+			issues: []string{"summary: summary is 301 words, want 200-300"},
 		},
 		{
-			name:  "empty summary",
-			edit:  func(n *notes) { n.Summary = "" },
-			warns: []string{"summary is 0 words, want 200-300"},
+			name:   "empty summary",
+			edit:   func(n *notes) { n.Summary = "" },
+			issues: []string{"summary: summary is 0 words, want 200-300"},
 		},
 		{
-			name:  "too few takeaways",
-			edit:  func(n *notes) { n.Takeaways = n.Takeaways[:4] },
-			warns: []string{"got 4 takeaways, want 5"},
+			name:   "too few takeaways",
+			edit:   func(n *notes) { n.Takeaways = n.Takeaways[:4] },
+			issues: []string{"takeaways: got 4 takeaways, want 5"},
 		},
 		{
-			name:  "too many takeaways",
-			edit:  func(n *notes) { n.Takeaways = append(n.Takeaways, "f") },
-			warns: []string{"got 6 takeaways, want 5"},
+			name:   "too many takeaways",
+			edit:   func(n *notes) { n.Takeaways = append(n.Takeaways, "f") },
+			issues: []string{"takeaways: got 6 takeaways, want 5"},
 		},
 		{
-			name: "bad topics",
-			edit: func(n *notes) {
-				n.Topics = []string{"remote-work", "Async Culture", "remote_work", "-remote", "remote-", "remote--work", "Remote", ""}
-			},
-			warns: []string{
-				`topic "Async Culture" is not kebab-case`,
-				`topic "remote_work" is not kebab-case`,
-				`topic "-remote" is not kebab-case`,
-				`topic "remote-" is not kebab-case`,
-				`topic "remote--work" is not kebab-case`,
-				`topic "Remote" is not kebab-case`,
-				`topic "" is not kebab-case`,
-			},
+			name: "messy topics are tidied, not flagged",
+			edit: func(n *notes) { n.Topics = []string{"Remote Work", "async_culture", "-hiring-"} },
+		},
+		{
+			name:   "too few topics after tidying",
+			edit:   func(n *notes) { n.Topics = []string{"remote-work", "Remote Work", "remote_work", "!!"} },
+			issues: []string{"topics: got 1 topics, want 3-8"},
+		},
+		{
+			name:   "too many topics",
+			edit:   func(n *notes) { n.Topics = strings.Fields("a b c d e f g h i") },
+			issues: []string{"topics: got 9 topics, want 3-8"},
 		},
 		{
 			name: "everything wrong",
@@ -119,10 +180,10 @@ func TestValidateLimits(t *testing.T) {
 				n.Takeaways = nil
 				n.Topics = []string{"Bad Topic"}
 			},
-			warns: []string{
-				"got 0 takeaways, want 5",
-				"summary is 10 words, want 200-300",
-				`topic "Bad Topic" is not kebab-case`,
+			issues: []string{
+				"summary: summary is 10 words, want 200-300",
+				"takeaways: got 0 takeaways, want 5",
+				"topics: got 1 topics, want 3-8",
 			},
 		},
 	}
@@ -131,58 +192,117 @@ func TestValidateLimits(t *testing.T) {
 			j := newTestJob(t, newMockLLM(t), Config{})
 			n := validNotes()
 			tt.edit(n)
-			j.validate(context.Background(), n)
-			if fmt.Sprint(j.warnings) != fmt.Sprint(tt.warns) {
-				t.Errorf("warnings = %q, want %q", j.warnings, tt.warns)
+			c := j.check(n)
+			var got []string
+			for _, is := range c.issues {
+				got = append(got, is.field+": "+is.problem)
+			}
+			if fmt.Sprint(got) != fmt.Sprint(tt.issues) {
+				t.Errorf("issues = %q, want %q", got, tt.issues)
+			}
+			if c.needsRepair() != (len(tt.issues) > 0) {
+				t.Errorf("needsRepair = %v with issues %q", c.needsRepair(), got)
 			}
 		})
 	}
 }
 
-func TestFindQuote(t *testing.T) {
+func TestFinish(t *testing.T) {
+	j := newTestJob(t, newMockLLM(t), Config{})
+	n := validNotes()
+	n.Summary = "too short"
+	n.Quotes = quotes("Welcome back.", "Something nobody said.", "Welcome back.")
+
+	got := j.finish(j.check(n))
+
+	if len(got.Quotes) != 1 {
+		t.Errorf("quotes = %+v, want only the verified one", got.Quotes)
+	}
+	want := []string{
+		`dropped quote: "Something nobody said." was not found in the transcript (closest match `,
+		`dropped quote: "Welcome back." repeats another quote`,
+		"got 1 quotes, want 3-5",
+		"summary is 2 words, want 200-300",
+	}
+	if len(j.warnings) != len(want) {
+		t.Fatalf("warnings = %q, want %d", j.warnings, len(want))
+	}
+	for i, w := range want {
+		if !strings.HasPrefix(j.warnings[i], w) {
+			t.Errorf("warning %d = %q, want prefix %q", i, j.warnings[i], w)
+		}
+	}
+}
+
+func TestTidyTopics(t *testing.T) {
+	got := tidyTopics([]string{"remote-work", "Async Culture", "remote_work", "  AI/ML ", "covid-19", "--", "", "Café Talk", "async-culture"})
+	want := []string{"remote-work", "async-culture", "ai-ml", "covid-19", "café-talk"}
+	if !slices.Equal(got, want) {
+		t.Errorf("tidyTopics = %q, want %q", got, want)
+	}
+}
+
+func TestMatchQuote(t *testing.T) {
 	j := newTestJob(t, newMockLLM(t), Config{})
 	tests := []struct {
 		name  string
 		quote string
 		want  string // timestamp of the matching segment; empty for no match
+		text  string // the match as said, when it differs from quote
 	}{
-		{"exact segment", "At my last startup we hit break-even in 18 months.", "02:10"},
-		{"substring", "break-even in 18 months", "02:10"},
-		{"ignores case", "WELCOME BACK", "00:00"},
-		{"straight apostrophe", "Today we're diving", "00:00"},
-		{"straight dash", "since day one - no offices", "01:20"},
-		{"en dash", "since day one – no offices", "01:20"},
-		{"collapses whitespace", "  GitLab   has been\n\tall-remote ", "01:20"},
-		{"trims straight quotes", `"Welcome back."`, "00:00"},
-		{"trims curly quotes", "“Welcome back.”", "00:00"},
-		{"trims single quotes", "‘Welcome back.’", "00:00"},
-		{"not said", "Something nobody said.", ""},
-		{"spans segments", "remote work. GitLab has been", ""},
-		{"paraphrase", "GitLab has always been all-remote", ""},
-		{"empty", "", ""},
-		{"only whitespace", "  \n ", ""},
-		{"only quote marks", `"“”'`, ""},
+		{"exact segment", "At my last startup we hit break-even in 18 months.", "02:10", ""},
+		{"substring", "break-even in 18 months", "02:10", ""},
+		{"ignores case", "WELCOME BACK", "00:00", "Welcome back"},
+		{"straight apostrophe", "Today we're diving", "00:00", "Today we’re diving"},
+		{"straight dash", "since day one - no offices", "01:20", "since day one — no offices"},
+		{"en dash", "since day one – no offices", "01:20", "since day one — no offices"},
+		{"collapses whitespace", "  GitLab   has been\n\tall-remote ", "01:20", "GitLab has been all-remote"},
+		{"trims straight quotes", `"Welcome back."`, "00:00", "Welcome back."},
+		{"trims curly quotes", "“Welcome back.”", "00:00", "Welcome back."},
+		{"trims single quotes", "‘Welcome back.’", "00:00", "Welcome back."},
+		{"widens to whole words", "last startup we hit break-even in 18 month", "02:10", "last startup we hit break-even in 18 months"},
+		{"fuzzy: dropped hyphen", "At my last startup we hit breakeven in 18 months.", "02:10", "At my last startup we hit break-even in 18 months."},
+		{"fuzzy: comma for dash", "GitLab has been all remote since day one, no offices at all", "01:20", "GitLab has been all-remote since day one — no offices at all"},
+		{"not said", "Something nobody said.", "", ""},
+		{"spans segments", "remote work. GitLab has been", "", ""},
+		{"paraphrase", "GitLab has always been all-remote", "", ""},
+		{"empty", "", "", ""},
+		{"only whitespace", "  \n ", "", ""},
+		{"only quote marks", `"“”'`, "", ""},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			seg, ok := j.findQuote(tt.quote)
-			if ok != (tt.want != "") || seg.Timestamp != tt.want {
-				t.Errorf("findQuote(%q) = %q %v, want %q", tt.quote, seg.Timestamp, ok, tt.want)
+			m, ok := j.matchQuote(tt.quote)
+			if !ok {
+				if tt.want != "" {
+					t.Errorf("matchQuote(%q) found nothing (best %.2f), want %q", tt.quote, m.score, tt.want)
+				}
+				return
+			}
+			if tt.want == "" {
+				t.Fatalf("matchQuote(%q) = %+v, want no match", tt.quote, m)
+			}
+			text := tt.text
+			if text == "" {
+				text = tt.quote
+			}
+			if m.seg.Timestamp != tt.want || m.text != text {
+				t.Errorf("matchQuote(%q) = %q at %s, want %q at %s", tt.quote, m.text, m.seg.Timestamp, text, tt.want)
 			}
 		})
 	}
 }
 
-func TestFindQuoteFirstSegment(t *testing.T) {
+func TestMatchQuoteFirstSegment(t *testing.T) {
 	j := newTestJob(t, newMockLLM(t), Config{})
 	// "remote" appears in both the first and second segments.
-	seg, ok := j.findQuote("remote")
-	if !ok || seg.Timestamp != "00:00" || seg.Speaker != "Sarah" {
-		t.Errorf("findQuote = %+v %v, want the first segment", seg, ok)
+	m, ok := j.matchQuote("remote")
+	if !ok || m.seg.Timestamp != "00:00" || m.seg.Speaker != "Sarah" || m.index != 0 {
+		t.Errorf("matchQuote = %+v %v, want the first segment", m, ok)
 	}
 }
 
-func TestNormalize(t *testing.T) {
+func TestFold(t *testing.T) {
 	for in, want := range map[string]string{
 		"":                       "",
 		"Hello World":            "hello world",
@@ -193,8 +313,32 @@ func TestNormalize(t *testing.T) {
 		"wait…":                  "wait...",
 		"ALREADY normal - 'ok'.": "already normal - 'ok'.",
 	} {
-		if got := normalize(in); got != want {
-			t.Errorf("normalize(%q) = %q, want %q", in, got, want)
+		f := fold(in)
+		if got := string(f.runes); got != want {
+			t.Errorf("fold(%q) = %q, want %q", in, got, want)
+		}
+		// Copying all of it back gives the original, trimmed.
+		if got := f.source(0, len(f.runes)); got != strings.TrimSpace(in) {
+			t.Errorf("fold(%q).source = %q, want it trimmed", in, got)
+		}
+	}
+}
+
+func TestClosest(t *testing.T) {
+	tests := []struct {
+		q, text          string
+		start, end, dist int
+	}{
+		{"abc", "xxabcxx", 2, 5, 0},
+		{"abxde", "xxabcdexx", 2, 7, 1},
+		{"abc", "", 0, 0, 3},
+		{"abcdef", "abc", 0, 3, 3},
+	}
+	for _, tt := range tests {
+		start, end, dist := closest([]rune(tt.q), []rune(tt.text))
+		if start != tt.start || end != tt.end || dist != tt.dist {
+			t.Errorf("closest(%q, %q) = %d, %d, %d; want %d, %d, %d",
+				tt.q, tt.text, start, end, dist, tt.start, tt.end, tt.dist)
 		}
 	}
 }

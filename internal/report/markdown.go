@@ -79,11 +79,7 @@ func (r *Report) writeQuotes(b *strings.Builder) {
 		return
 	}
 	for _, q := range r.Quotes {
-		fmt.Fprintf(b, "> “%s”\n>\n> — %s", oneLine(q.Text), attribution(q.Speaker, q.Timestamp))
-		if !q.Verified {
-			b.WriteString(" · ⚠ not found verbatim in transcript")
-		}
-		b.WriteString("\n\n")
+		fmt.Fprintf(b, "> “%s”\n>\n> — %s\n\n", oneLine(q.Text), attribution(q.Speaker, q.Timestamp))
 	}
 }
 

@@ -6,6 +6,7 @@ import (
 	"errors"
 	"io"
 	"log/slog"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -35,10 +36,12 @@ var testEpisode = &transcript.Episode{
 	},
 }
 
-// Matchers for the three model stages. The summary and plan calls run
+// Matchers for the model stages. The summary and plan calls run
 // concurrently, so expectations match on the request rather than call order.
+// A repair continues the summary conversation: transcript, reply, problems.
 var (
-	summaryReq = mock.MatchedBy(func(r llm.ChatRequest) bool { return r.System == summarySystem })
+	summaryReq = mock.MatchedBy(func(r llm.ChatRequest) bool { return r.System == summarySystem && len(r.Messages) == 1 })
+	repairReq  = mock.MatchedBy(func(r llm.ChatRequest) bool { return r.System == summarySystem && len(r.Messages) == 3 })
 	planReq    = mock.MatchedBy(func(r llm.ChatRequest) bool { return r.System != summarySystem && len(r.Tools) == 0 })
 	loopReq    = mock.MatchedBy(func(r llm.ChatRequest) bool { return r.System != summarySystem && len(r.Tools) > 0 })
 )
@@ -66,19 +69,27 @@ func toolUse(calls ...llm.ToolCall) *llm.ChatResponse {
 	return resp
 }
 
+// goodNotes returns summary output that passes check once code tidies it,
+// so it needs no repair.
 func goodNotes(t *testing.T) string {
 	t.Helper()
-	n := notes{
+	return notesJSON(t, notes{
 		Summary:   strings.Repeat("word ", 250),
 		Takeaways: []string{"a", "b", "c", "d", "e"},
 		Quotes: []noteQuote{
-			// Straight apostrophe and dash differ from the transcript, and
-			// the timestamp is wrong; validate should fix both.
+			// The straight dash differs from the transcript and the
+			// timestamp is wrong; check should fix both.
 			{Text: "GitLab has been all-remote since day one - no offices at all.", Speaker: "Mark", Timestamp: "09:99"},
-			{Text: "Something nobody said.", Speaker: "Sarah", Timestamp: "00:00"},
+			{Text: "Welcome back.", Speaker: "Sarah", Timestamp: "00:00"},
+			// A dropped hyphen and the wrong speaker: a fuzzy match.
+			{Text: "At my last startup we hit breakeven in 18 months.", Speaker: "Sarah", Timestamp: "02:10"},
 		},
-		Topics: []string{"remote-work", "Async Culture"},
-	}
+		Topics: []string{"remote-work", "Async Culture", "bootstrapping"},
+	})
+}
+
+func notesJSON(t *testing.T, n notes) string {
+	t.Helper()
 	b, err := json.Marshal(n)
 	if err != nil {
 		t.Fatal(err)
@@ -157,14 +168,16 @@ func TestRun(t *testing.T) {
 	if rep.Episode.Duration != "02:10" {
 		t.Errorf("Duration = %q, want 02:10", rep.Episode.Duration)
 	}
-	if len(rep.Quotes) != 2 {
-		t.Fatalf("got %d quotes, want 2", len(rep.Quotes))
+	wantQuotes := []report.Quote{
+		{Text: "GitLab has been all-remote since day one — no offices at all.", Speaker: "Mark", Timestamp: "01:20"},
+		{Text: "Welcome back.", Speaker: "Sarah", Timestamp: "00:00"},
+		{Text: "At my last startup we hit break-even in 18 months.", Speaker: "Mark", Timestamp: "02:10"},
 	}
-	if q := rep.Quotes[0]; !q.Verified || q.Timestamp != "01:20" {
-		t.Errorf("quote 0 = %+v, want verified at 01:20", q)
+	if !slices.Equal(rep.Quotes, wantQuotes) {
+		t.Errorf("quotes = %+v, want %+v", rep.Quotes, wantQuotes)
 	}
-	if rep.Quotes[1].Verified {
-		t.Errorf("quote 1 verified, want not found")
+	if want := []string{"remote-work", "async-culture", "bootstrapping"}; !slices.Equal(rep.Topics, want) {
+		t.Errorf("topics = %q, want %q", rep.Topics, want)
 	}
 
 	fc := rep.FactCheck
@@ -193,11 +206,8 @@ func TestRun(t *testing.T) {
 	if rep.Run.Provider != "mock" || rep.Run.Model != "test-model" || rep.Run.TraceID == "" {
 		t.Errorf("run = %+v", rep.Run)
 	}
-	wantWarnings := []string{"quote not found", `topic "Async Culture"`}
-	for _, w := range wantWarnings {
-		if !containsPrefix(rep.Run.Warnings, w) {
-			t.Errorf("warnings %q missing %q", rep.Run.Warnings, w)
-		}
+	if len(rep.Run.Warnings) != 0 {
+		t.Errorf("warnings = %q, want none", rep.Run.Warnings)
 	}
 }
 

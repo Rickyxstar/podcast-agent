@@ -124,8 +124,27 @@ func format(e Event) string {
 			str("id"), str("verdict"), float("confidence"), truncate(str("reasoning"), 120))
 
 	case "validation":
-		return fmt.Sprintf("🧪 Validation: %d of %s found verbatim, %s, %d-word summary",
+		s := fmt.Sprintf("🧪 Validation: %d of %s found in transcript, %s, %d-word summary",
 			num("quotes_verified"), count(num("quotes"), "quote"), count(num("takeaways"), "takeaway"), num("summary_words"))
+		if n := num("problems"); n > 0 {
+			s += " → " + count(n, "problem")
+		}
+		return s
+
+	case "repair":
+		if err := str("error"); err != "" {
+			return "🔧 Repair failed: " + truncate(err, 100)
+		}
+		var asked, got []string
+		if n := num("quotes_requested"); n > 0 {
+			asked = append(asked, count(n, "new quote"))
+			got = append(got, fmt.Sprintf("%d of %d quotes accepted", num("quotes_accepted"), n))
+		}
+		if n := num("fixes_requested"); n > 0 {
+			asked = append(asked, "fixes to "+strings.ReplaceAll(str("fields"), ",", ", "))
+			got = append(got, fmt.Sprintf("%d of %d fixes accepted", num("fixes_accepted"), n))
+		}
+		return fmt.Sprintf("🔧 Repair: asked for %s → %s", strings.Join(asked, " + "), strings.Join(got, ", "))
 
 	case "done":
 		return fmt.Sprintf("🏁 Done in %s: fact-check %s, %s, %s, $%.4f",

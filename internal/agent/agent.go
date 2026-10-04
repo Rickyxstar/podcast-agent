@@ -1,10 +1,11 @@
 // Package agent runs the podcast pipeline for one episode: ingest, then the
-// summary + notes stage and the fact-check agent concurrently, then
-// validation, producing a report.Report.
+// summary + notes stage and the fact-check agent concurrently, producing a
+// report.Report.
 //
 // Only fact-checking is agentic (plan, then a model-driven tool loop). The
-// summary is a single structured call, and ingest and validation are plain
-// Go, so the model is used only where it earns its cost.
+// summary is a single structured call, checked in plain Go and sent back
+// for one repair if it fails; ingest is plain Go too, so the model is used
+// only where it earns its cost.
 package agent
 
 import (
@@ -138,10 +139,13 @@ func (a *Agent) Run(ctx context.Context, ep *transcript.Episode) (*report.Report
 		},
 		Summary:   n.Summary,
 		Takeaways: n.Takeaways,
+		Quotes:    make([]report.Quote, len(n.Quotes)),
 		Topics:    n.Topics,
 		FactCheck: report.FactCheck{Status: fc.status, Claims: fc.claims},
 	}
-	rep.Quotes = j.validate(ctx, n)
+	for i, q := range n.Quotes {
+		rep.Quotes[i] = report.Quote(q)
+	}
 
 	usage := notesM.usage
 	usage.Add(factM.usage)
@@ -194,7 +198,7 @@ func (j *job) warnf(format string, args ...any) {
 }
 
 // emit logs a trace event (ingest, plan, claim, llm_call, tool_call,
-// tool_result, verdict, validation or done) and sends it to the job's
+// tool_result, verdict, validation, repair or done) and sends it to the job's
 // trace sink. These events are the agent-reasoning deliverable.
 func (j *job) emit(ctx context.Context, event string, attrs ...slog.Attr) {
 	j.log.LogAttrs(ctx, slog.LevelInfo, event, attrs...)

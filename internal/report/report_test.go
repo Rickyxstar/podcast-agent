@@ -32,8 +32,8 @@ func sampleReport() *Report {
 			"Remote work needs explicit\nonboarding.",
 		},
 		Quotes: []Quote{
-			{Text: "If it isn't written down, it didn't happen.", Speaker: "Mark Rivera", Timestamp: "04:10", Verified: true},
-			{Text: "Offices were never about productivity.", Speaker: "Sarah Chen", Timestamp: "05:02", Verified: false},
+			{Text: "If it isn't written down, it didn't happen.", Speaker: "Mark Rivera", Timestamp: "04:10"},
+			{Text: "Offices were never about productivity.", Speaker: "Sarah Chen", Timestamp: "05:02"},
 		},
 		Topics: []string{"remote-work", "async-culture"},
 		FactCheck: FactCheck{
@@ -72,7 +72,7 @@ func sampleReport() *Report {
 			Provider: "anthropic", Model: "claude-opus-5-5",
 			Tokens:  Tokens{Input: 12000, Output: 3400, CacheRead: 8000},
 			CostUSD: 0.42, DurationMS: 18250, TraceID: "tr-123",
-			Warnings: []string{"quote q2 not found verbatim in transcript"},
+			Warnings: []string{"dropped quote not found in transcript: \"Offices were never optional.\""},
 		},
 	}
 }

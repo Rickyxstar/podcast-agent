@@ -59,16 +59,20 @@ From the transcript, produce:
 
 Use only what is said in the transcript. Do not add facts, numbers or names that the speakers did not say.`
 
-// summarize runs the summary + notes stage: one structured call, no tools.
+// summarize runs the summary + notes stage: one structured call, no tools,
+// then the checks in check. If any fail, the problems go back to the model
+// once (see repair); quotes that still fail are dropped, and other problems
+// are left as warnings.
 //
 // TODO: repair malformed JSON from weaker local models before giving up.
 func (j *job) summarize(ctx context.Context, m *meter) (*notes, error) {
+	msgs := []llm.Message{{
+		Role: llm.RoleUser,
+		Text: "<transcript>\n" + j.lines + "</transcript>",
+	}}
 	resp, err := j.chat(ctx, "summary", m, llm.ChatRequest{
-		System: summarySystem,
-		Messages: []llm.Message{{
-			Role: llm.RoleUser,
-			Text: "<transcript>\n" + j.lines + "</transcript>",
-		}},
+		System:         summarySystem,
+		Messages:       msgs,
 		ResponseSchema: notesSchema,
 		Effort:         j.cfg.SummaryEffort,
 	})
@@ -79,5 +83,11 @@ func (j *job) summarize(ctx context.Context, m *meter) (*notes, error) {
 	if err := json.Unmarshal([]byte(resp.Message.Text), &n); err != nil {
 		return nil, fmt.Errorf("decode notes: %w", err)
 	}
-	return &n, nil
+
+	c := j.check(&n)
+	j.emitValidation(ctx, &n, c)
+	if c.needsRepair() {
+		c = j.repair(ctx, m, append(msgs, resp.Message), c)
+	}
+	return j.finish(c), nil
 }

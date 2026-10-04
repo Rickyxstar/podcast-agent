@@ -8,44 +8,39 @@
     ],
     "duration": "06:00"
   },
-  "summary": "In this episode of Work Reimagined, host Sarah Johnson talks with guest Mark Rivera about what remote work really looks like in 2025 and beyond, moving past the hype. Mark argues that remote work is not just about working from anywhere. Instead, it is about an async-first culture, documentation, and autonomy, built on structured processes and trust. He points to GitLab, Automattic, and Doist as examples of companies that have written handbooks for everything, so employees can figure things out without constant guidance. Sarah asks whether this approach scales down, and Mark says even small teams benefit from clear documentation. He explains that it reduces context-switching and keeps knowledge from being siloed. On tools, Mark says Zoom and Slack help, but culture is the real solution. Relying on Slack for everything leads to burnout. To measure productivity without micromanaging, he recommends focusing on outcomes over hours: set goals, track progress on deliverables, and trust the team. In his view, transparency matters more than check-ins. The conversation then turns to loneliness and lack of connection, a commonly cited downside of remote work. Mark suggests regular virtual coffee chats, occasional in-person retreats, and team rituals, noting that remote does not have to mean isolated but does require intention. Looking ahead, he predicts that remote-first companies will dominate talent acquisition, that local offices may become optional hubs, and that async culture will become standard practice. His closing advice for teams moving to remote work is to focus on documentation, set clear goals, invest in culture, and trust the team, which he calls the foundation.",
+  "summary": "In this episode of Work Reimagined, host Sarah Johnson talks with guest Mark Rivera about what remote work really looks like in 2025 and beyond, moving past the hype to the practices that make it work. Mark challenges the common idea that remote work simply means working from anywhere. He argues it is really about an async-first culture, documentation, and autonomy, supported by structured processes and trust. To show how companies build that culture, Mark points to GitLab, Automattic, and Doist, which have written handbooks for everything so employees can find answers without constant guidance. Asked whether this approach scales down, he says even small teams benefit from clear documentation because it reduces context-switching and keeps knowledge from being siloed. On tools, Mark cautions that Zoom and Slack help but are not the solution; culture is. Relying on Slack for everything, he warns, leads to burnout. For measuring productivity without micromanaging, he recommends focusing on outcomes over hours: setting goals, tracking progress on deliverables, and trusting the team, with transparency mattering more than check-ins. The conversation also tackles loneliness, a frequently cited downside of remote work. Mark suggests virtual coffee chats, occasional in-person retreats, and team rituals, stressing that remote does not have to mean isolated but does require intention. Looking ahead, he predicts remote-first companies will dominate talent acquisition, local offices may become optional hubs, and async culture will become standard practice. His closing advice for teams transitioning to remote work: focus on documentation, set clear goals, invest in culture, and trust your team.",
   "takeaways": [
-    "Treat remote work as an operating model built on async communication, documentation, autonomy, and trust, not just a change of location.",
-    "Write things down: handbook-style documentation helps teams of any size by reducing context-switching and preventing knowledge silos.",
-    "Don't expect tools to fix culture; leaning on Slack for everything can burn people out.",
-    "Measure outcomes rather than hours by setting goals, tracking deliverables, and favoring transparency over constant check-ins.",
-    "Fight isolation on purpose with virtual coffee chats, occasional in-person retreats, and team rituals."
+    "Treat remote work as an operating model built on async-first culture, documentation, autonomy, and trust, not just a change of location.",
+    "Write handbooks and clear documentation so people can find answers on their own; this helps small teams too by reducing context-switching and knowledge silos.",
+    "Tools like Zoom and Slack support remote work but don't replace culture, and relying on Slack for everything can burn people out.",
+    "Measure productivity by outcomes rather than hours: set goals, track deliverables, and favor transparency over frequent check-ins.",
+    "Fight isolation intentionally with virtual coffee chats, occasional in-person retreats, and team rituals."
   ],
   "quotes": [
     {
       "text": "Not quite. It’s more about async-first culture, documentation, and autonomy. Being remote doesn’t just mean a location; it means structured processes and trust.",
       "speaker": "Mark",
-      "timestamp": "00:45",
-      "verified": true
+      "timestamp": "00:45"
     },
     {
       "text": "They help, but tools aren’t the solution. Culture is. Slack is great, but if you rely on it for everything, people will burn out.",
       "speaker": "Mark",
-      "timestamp": "02:45",
-      "verified": true
+      "timestamp": "02:45"
     },
     {
       "text": "Outcomes over hours. Set goals, track progress on deliverables, and trust the team. Transparency matters more than check-ins.",
       "speaker": "Mark",
-      "timestamp": "03:25",
-      "verified": true
+      "timestamp": "03:25"
     },
     {
       "text": "Regular virtual coffee chats, occasional in-person retreats, and team rituals help. Remote doesn’t mean isolated; it just needs intention.",
       "speaker": "Mark",
-      "timestamp": "04:10",
-      "verified": true
+      "timestamp": "04:10"
     },
     {
       "text": "Focus on documentation, set clear goals, invest in culture, and trust your team. That’s the foundation.",
       "speaker": "Mark",
-      "timestamp": "05:35",
-      "verified": true
+      "timestamp": "05:35"
     }
   ],
   "topics": [
@@ -54,6 +49,7 @@
     "documentation",
     "productivity",
     "team-culture",
+    "employee-wellbeing",
     "future-of-work"
   ],
   "fact_check": {
@@ -83,12 +79,12 @@
       },
       {
         "id": "c3",
-        "claim": "GitLab, Automattic, and Doist have written handbooks covering how they work.",
+        "claim": "GitLab, Automattic and Doist have written handbooks for everything.",
         "speaker": "Mark Rivera",
         "timestamp": "01:20",
         "type": "factual",
         "verdict": "verified",
-        "confidence": 0.7,
+        "confidence": 0.71,
         "evidence": [
           {
             "source": "handbook.gitlab.com",
@@ -102,33 +98,34 @@
           },
           {
             "source": "automattic.com",
-            "snippet": "The Automattic Field Guide is a guide to working at Automattic. It’s our employee handbook and where we store all of the information that we need to understand how to work. That’s everything from setting up a home office, ordering company ... … The Automattic Field Guide is a guide to working at Automattic. It’s our employee handbook and where we store all of the information that we need to understand how to work. That’s everything from setting up a home office, ordering company swag, team member and lead expectations, our style guide, and more. … The Automattic Field Guide is a guide to working at Automattic. It’s our employee handbook and where we store all of the information that we need to understand how to work. That’s everything from s… … It’s a crowd-sourced internal resource that all Automatticians can add to or edit. If you are reading this on automattic.com, and you don’t currently work at Automattic you’ll see a selected set of pages that will give you a sense of our onboarding and welcome documents from the Field Guide.",
+            "snippet": "The Automattic Field Guide is a guide to working at Automattic. It’s our employee handbook and where we store all of the information that we need to understand how to work. That’s everything from setting up a home office, ordering company ... … The Automattic Field Guide is a guide to working at Automattic. It’s our employee handbook and where we store all of the information that we need to understand how to work. That’s everything from setting up a home office, ordering company swag, team member and lead expectations, our style guide, and more. … The Automattic Field Guide is a guide to working at Automattic. It’s our employee handbook and where we store all of the information that we need to understand how to work. That’s everything from s… … It’s a crowd-sourced internal resource that all Automatticians can add to or edit. If you are reading this on automattic.com, and you don’t currently work at Automattic you’ll see a selected set of pages that will give you a sense of our onboarding and welcome documents from the Field Guide. … Over time, we hope to add more. Please note: As this is a direct transfer of an existing internal document, please be aware that links which point to confidential, employee-only pages have been removed.",
             "url": "https://automattic.com/fieldguide/",
             "date": "2026-04-08"
           },
           {
-            "source": "distributed.blog",
-            "snippet": "These are the words every new hire at Automattic sees on their first day, emblazoned across the company’s online handbook. They are designed not to instill fear, but to prepare the newly-minted Automattician for life in a fast-moving, globally-distributed company. … If the chaos is so normative that it appears in Automattic’s Field Guide, that’s a message from the company to new employees that it can be a deliberate, even cultivated attribute. … These are the words every new hire at Automattic sees on their first day, emblazoned across the company’s online handbook. They are designed not to instill fear, but to prepare the newly-minted Automattician for life in a fast-moving, globally-distributed company. … Sonal joined Automattic almost three years ago, initially serving as a legal counsel. She drew on her experience as a lawyer who had advised hedge funds on topics like corporate structure and regulatory compliance. … We develop or acquire products that fall into three categories — things that we need to exist for Automattic’s operations, things that we build as experiments or that are useful tools for our community, and things that have the potential for substantial revenue growth.",
-            "url": "https://distributed.blog/2019/09/19/welcome-to-the-chaos/",
-            "date": "2020-04-23"
+            "source": "www.todoist.com",
+            "snippet": "“Firstly, the company handbook should be accessible to everyone in the company, so we integrated it with Doist’s single sign-on system. This makes both onboarding and offboarding easier and more secure. In terms of access control and authorization, there's no one-size-fits-all, but we opted for a democratic setup where published content is searchable by everyone. However, teams can have internal docs (e.g., drafts) they can hold to themselves before they're in a state to be shared more widely. … That process revealed that we had a lot of room for improvement, which provided the opportunity to up-level our entire process and the structure of our company handbook. As we began to rebuild, we were initially tempted to jump straight into finding the perfect platform. However, we quickly realized the importance of first clarifying our objectives. To guide us in this process, we posed a series of crucial questions to the squad: Ownership and Responsibility: Who will be the directly responsible individual (internally a DRD, Directly Responsible Doister) for our handbook? … This article will share Doist’s journey with documentation as a team of nearly 100 people spread across all time zones. We’ll dive into the challenges, pitfalls, and principles we have used to build a robust team documentation system that organizations can leverage to enhance productivity, streamline operations, and foster a culture of trust and collaboration. A company handbook is often also referred to as a documentation system or a central source of truth (SSoT). … If the handbook doesn't contain the answer directly, then it should guide you to it.\" ... At Doist, we've been proudly remote-first since our Founder and CEO, Amir, started building Todoist in 2007, prioritizing the flexibility and efficiency that remote work offers. Alongside this philosophy lives a dedication to transparent communication and documentation, which officially dates back over a decade ago when we codified our core value of Communication as the first official entry into what is now our company handbook. … “Firstly, the company handbook should be accessible to everyone in the company, so we integrated it with Doist’s single sign-on system. This makes both onboarding and offboarding easier and more secure. In terms of access control and authorization, there's no one-size-fits-all, but we opted for a democratic setup where published content is searchable by everyone. However, teams can have internal docs (e.g., drafts) they can hold to themselves before they're in a state to be shared more widely.",
+            "url": "https://www.todoist.com/inspiration/building-a-company-handbook",
+            "date": "2026-01-30"
           },
           {
-            "source": "doist.com",
-            "snippet": "Remote work has become the new normal. Read our online handbook, Remote Setup: The Remote Guide to Logistics, to learn how your company can approach incorporation, taxes, and hiring to join the distributed revolution. … Remote work has become the new normal. Read our online handbook, Remote Setup: The Remote Guide to Logistics, to learn how your company can approach incorporation, taxes, and hiring to join the distributed revolution. … Just 20 years ago, this style of working would have been impossible. But today, more and more teams are discovering the benefits of a remote-first workplace where anyone can collaborate with anyone else from anywhere in the world. … It’s never been cheaper to travel. For example, for a recent team retreat, we flew over 70 people from around the world to Thailand. Even as a completely bootstrapped and remote-first company, we can afford to meet up and get to know one another in person. … Why is the shift toward remote-first so significant? Previously, all jobs required people to live close to their places of work. Even nomadic hunter-gatherers had to go where the food was. Remote-first is the first way of working that is truly location-independent.",
-            "url": "https://doist.com/how-we-work/remote-first-workplaces",
-            "date": "2026-09-28"
+            "source": "www.leadwithai.co",
+            "snippet": "The company didn't have to build context from scratch. They had thousands of Twist threads, a 1,800-page handbook in Outline, project data in Todoist, code in GitHub, and years of documentation in Google Workspace. … Doist OS is a shared AI workspace that connects every tool where the company's knowledge lives, so any team member can ask questions and take actions across all of them from a single interface. It connects Todoist, Twist, Outline (the handbook), GitHub, and Google Workspace, including Drive, email, Docs, Calendar, and Sheets. … This is the personality and values layer of Doist OS. It knows the company's communication standards, principles, and culture. When it responds, it's guided by that. Third, an address book and index. This is what keeps costs and token usage reasonable. \"When I ask about the sabbatical policy, I don't have to say 'check the handbook for this content,'\" Warrington explained. \"It knows this is likely in the handbook, but there may also be conversations happening in Twist.\" … Doist OS ships with 55 pre-built skills across 10 domains, and anyone in the company can add new ones. A skill is a repeatable workflow. \"Slash create daily briefing\" pulls everything that matters for your morning. \"What did I miss while I was out of office?\" consolidates a week of Twist threads, flags what needs your decision, and prioritizes what requires action today versus later. \"Review this section of the handbook for outdated content\" scans a portion of the 1,800-page document, identifies conflicting pages, and surfaces tasks that need to be assigned. … \"We have 1,800 pages of handbook content. A big part of my job is keeping that up to date and making sure everybody's contributing to it.\" – Chase Warrington, Doist. When Doist decided to go all-in on AI, that documentation foundation meant there was already a rich, structured knowledge base to feed into a shared AI workspace. The company didn't have to build context from scratch. They had thousands of Twist threads, a 1,800-page handbook in Outline, project data in Todoist, code in GitHub, and years of documentation in Google Workspace.",
+            "url": "https://www.leadwithai.co/article/doist-doistos-ai-brain",
+            "date": "2026-06-24"
           },
           {
-            "source": "twist.com",
-            "snippet": "For a concrete and in-depth list ... employee handbook, which is public. The company explains its practices for medical insurance, dental insurance, vision insurance, flexible spending accounts, policies for paid-time-off, parental leave, summer hours, sabbaticals, retirement plans, fitness allowances, community supported agriculture allowances, charitable gifts matching, office set-up, a co-working space stipend, and expense account. Here are Doist’s benefits ... … For a concrete and in-depth list of benefits, take a look at software Basecamp’s employee handbook, which is public. The company explains its practices for medical insurance, dental insurance, vision insurance, flexible spending accounts, policies for paid-time-off, parental leave, summer hours, sabbaticals, retirement plans, fitness allowances, community supported agriculture allowances, charitable gifts matching, office set-up, a co-working space stipend, and expense account. Here are Doist’s benefits and processes at a glance: … Incorporating, taxes, and hiring on a global team. … This guide outlines the legal and finance challenges that companies often navigate, when building a remote-first workforce. Rather than offer prescriptive steps to regulatory gray zones, this resource highlights judgment calls that leaders should anticipate making, including outlining risks and rewards. Throughout each section, we’ll share our experience at Doist, a remote-first company, on building and scaling remote operations over the last 12 years. … It’s a brand new framework that's already creating ripple effects in global entrepreneurial activity. Remote work is good for the global economy because it creates actual value for humans and societies. “My favorite thing about running a remote first company is the fact that you can hire from all over the world.” - Allan Christensen (COO, Doist)",
-            "url": "https://twist.com/remote-work-guides/remote-company-setup"
+            "source": "slab.com",
+            "snippet": "Some of it lived in Dropbox Paper, ... was in Twist threads. You would have to check in three to four different places to find what you needed, and there was also some duplication.” There was a strong need for a centralized location where each piece of documentation could live. Then, about a year ago, Doist took a page from the book of another company with a strong writing culture. Gitlab documents all their internal processes and knowledge in a company handbook and makes ... … Some of it lived in Dropbox Paper, some was in Google Docs, some of it was in Twist threads. You would have to check in three to four different places to find what you needed, and there was also some duplication.” There was a strong need for a centralized location where each piece of documentation could live. Then, about a year ago, Doist took a page from the book of another company with a strong writing culture. Gitlab documents all their internal processes and knowledge in a company handbook and makes it available to the public. … Their remote workforce puts writing first to democratize communication … In an effort to streamline communication and make their documentation more searchable, Doist has developed a handbook that’s housed in GitHub. The handbook includes everything anyone would need to know about working at Doist, and there are years of learning and transparency they can immediately draw upon. Whether it’s reading about the story of Doist, the company’s mission and values, revenue plans for the future, or HR practices and company policies, having access to this from day one lets people know what kind of journey to expect. … For remote, global teams, asynchronous communication is a given—and learning how to master it is a must. Since its founding 11 years ago, Doist has been a remote-first asynchronous company. Doist started as a productivity app, Todoist, and launched it's second product Twist in 2017, an asynchronous communication tool.",
+            "url": "https://slab.com/blog/how-writing-helps-doists-asynchronous-setup-soar/",
+            "date": "2022-11-29"
           }
         ],
-        "reasoning": "Each company's own site confirms a current handbook: GitLab's public handbook (over 2,000 printed pages), Automattic's Field Guide (\"our employee handbook\"; mostly internal, with some pages public), and Doist's online remote-work handbook \"Remote Setup\". Only the narrower claim is verified; the speaker's wording that they wrote handbooks \"for everything\" should not be published, and all evidence is first-party web, since the knowledge base had no results."
+        "reasoning": "All three companies keep large handbooks that are still in use. GitLab has a public handbook of over 2,000 pages covering 'nearly every aspect' of the company. Automattic's Field Guide is its employee handbook, covering 'everything from setting up a home office' to style guides. Doist has a company handbook of about 1,800 pages, described in a January 2026 post and a June 2026 article. 'For everything' is spoken hyperbole, but it matches how the companies describe their own handbooks. Note that Automattic's and Doist's handbooks are mainly internal; only parts are public. All sources are web results, mostly from the companies themselves; none came from the knowledge base."
       },
       {
         "id": "c4",
-        "claim": "Because of these handbooks, employees can figure things out without asking for constant guidance.",
+        "claim": "Thanks to these handbooks, employees at those companies can figure things out without asking for constant guidance.",
         "speaker": "Mark Rivera",
         "timestamp": "01:20",
         "type": "opinion",
@@ -139,7 +136,7 @@
       },
       {
         "id": "c5",
-        "claim": "Clear documentation benefits even small teams by reducing context-switching and keeping knowledge from being siloed.",
+        "claim": "Even small teams benefit from clear documentation, because it reduces context-switching and keeps knowledge from being siloed.",
         "speaker": "Mark Rivera",
         "timestamp": "02:05",
         "type": "opinion",
@@ -150,7 +147,7 @@
       },
       {
         "id": "c6",
-        "claim": "Tools like Zoom and Slack aren't the solution; culture is.",
+        "claim": "Tools like Zoom and Slack aren't the solution; culture is. Relying on Slack for everything leads to burnout.",
         "speaker": "Mark Rivera",
         "timestamp": "02:45",
         "type": "opinion",
@@ -161,17 +158,6 @@
       },
       {
         "id": "c7",
-        "claim": "Relying on Slack for everything will cause people to burn out.",
-        "speaker": "Mark Rivera",
-        "timestamp": "02:45",
-        "type": "opinion",
-        "verdict": "unverifiable",
-        "confidence": 0.4,
-        "evidence": [],
-        "reasoning": "Opinion, not a factual claim."
-      },
-      {
-        "id": "c8",
         "claim": "Teams should measure productivity by outcomes rather than hours, and transparency matters more than check-ins.",
         "speaker": "Mark Rivera",
         "timestamp": "03:25",
@@ -182,13 +168,13 @@
         "reasoning": "Opinion, not a factual claim."
       },
       {
-        "id": "c9",
+        "id": "c8",
         "claim": "Loneliness or lack of connection is often cited as a downside of remote work.",
         "speaker": "Sarah Johnson",
         "timestamp": "03:55",
         "type": "factual",
         "verdict": "verified",
-        "confidence": 0.72,
+        "confidence": 0.65,
         "evidence": [
           {
             "source": "buffer.com",
@@ -207,23 +193,17 @@
             "date": "2026-06-22"
           },
           {
-            "source": "www.forbes.com",
-            "snippet": "In Buffer’s latest State of Remote Work survey, 23% of fully remote workers identified loneliness as their second biggest challenge—just behind difficulties with collaboration and communication. … For remote and hybrid professionals, the risk is even higher. In Buffer’s latest State of Remote Work survey, 23% of fully remote workers identified loneliness as their second biggest challenge—just behind difficulties with collaboration and communication. … Follow AuthorJun 04, 2025, 10:00am EDTJun 17, 2025, 01:31pm EDT · Remote work loneliness can be mitigated using creative strategies.getty … Many remote workers report that struggling to disconnect at the end of the workday is their biggest challenge. Develop end-of-day routines that signal the transition from work to personal time. … Co-working spaces offer professional environments that provide opportunities for networking and casual conversations. If they are not accessible, coffee shops and libraries serve similar purposes. Connect with other remote workers in your area to coordinate working sessions and share resources.",
-            "url": "https://www.forbes.com/sites/carolinecastrillon/2025/06/04/5-strategies-to-prevent-social-isolation-when-working-remotely/",
-            "date": "2025-06-17"
-          },
-          {
-            "source": "us.neat.no",
-            "snippet": "Despite the many benefits, remote work introduces unique challenges. Communication gaps remain a top concern, with 29% of remote workers citing it as a major issue. Loneliness is another persistent challenge, reported by 22% of employees. … Despite the many benefits, remote work introduces unique challenges. Communication gaps remain a top concern, with 29% of remote workers citing it as a major issue. Loneliness is another persistent challenge, reported by 22% of employees. … Solving these challenges requires intentional strategy. Organizations are investing in regular virtual check-ins, team retreats, mental health resources, and collaboration platforms. Asynchronous tools, such as project management software and shared dashboards, are essential for maintaining alignment across time zones. The tools enabling remote work have matured dramatically by 2025. … What was once seen as an emergency response to the COVID-19 pandemic has now solidified into a permanent and evolving work model. In 2025, remote work is no longer an exception – it’s a foundational component of modern workforce strategies across industries. … In 2025, approximately 32.6 million Americans – about 22% of the U.S. workforce – are working remotely. While this is a decline from the pandemic-era highs, it’s a substantial increase from pre-pandemic levels, signalling a lasting shift in work culture.",
-            "url": "https://us.neat.no/resources/the-state-of-remote-work-2025-statistics/",
-            "date": "2026-05-28"
+            "source": "www.makerstations.io",
+            "snippet": "... Yes. Gallup’s State of the Global Workplace: 2025 report puts loneliness at 27% for exclusively remote employees, 23% for hybrid workers and 20% for on-site remote-capable workers. … Exclusively remote workers report loneliness seven points above on-site remote-capable workers. Stress runs the other way and peaks among hybrid workers at 46%, a point above fully remote staff. Fully remote employees also record the highest engagement at 31%, and 57% are watching or applying for other jobs. Weigh that against the output data for home-based work and current US telework rates. Gallup surveyed 19,043 U.S. … Reward Gateway found 39% of 1,000 U.S. employees surveyed in August 2025 often feel lonely at work. Cigna’s 2024 Vitality Index classifies more than half of American workers as lonely using a validated scale. ... Yes. Gallup’s State of the Global Workplace: 2025 report puts loneliness at 27% for exclusively remote employees, 23% for hybrid workers and 20% for on-site remote-capable workers. … Do Reddit threads about remote work loneliness reflect the research? Reddit threads are anecdotal, not survey data. The measured figure comes from Gallup’s May 2025 study of 19,043 U.S. workers: 27% of remote-ready Gen Z employees felt lonely a lot the previous day. … Twenty percent hit high-frequency loneliness, defined as once or twice a week or more, double the millennial rate, while 69% of Gen X feel lonely less than once a month or never. Burnout splits the same way. 33% of respondents reported symptoms in the past year: 38% among Gen Z, 37% among millennials, 27% among Gen X. Source: CoworkingCafe, 2026 Remote Work Well-Being Survey, fielded 30 June to 10 October 2025, n=1,140 · Gallup reports overall engagement has a stronger effect on loneliness than any of the 12 individual engagement aspects it tracks, on a U.S.",
+            "url": "https://www.makerstations.io/workplace-loneliness-statistics/",
+            "date": "2026-08-12"
           }
         ],
-        "reasoning": "Buffer's State of Remote Work reports put loneliness among remote workers' top struggles (21% in 2018, and second at 23% in 2023). Gallup finds fully remote employees report more loneliness (25%) than on-site workers (16%). Recent 2025 coverage still calls it a persistent challenge."
+        "reasoning": "Buffer's State of Remote Work surveys keep ranking loneliness among the top struggles: first in 2018 (21%, tied) and second in 2023 (23%). Gallup's 2024 data shows fully remote workers report more loneliness (25%) than on-site workers (16%). A secondary source reports the same pattern in Gallup's 2025 data (27% remote vs 20% on-site). So loneliness is clearly a commonly cited downside of remote work. All sources are web results; none came from the knowledge base."
       },
       {
-        "id": "c10",
-        "claim": "Virtual coffee chats, occasional in-person retreats, and team rituals help counter remote isolation.",
+        "id": "c9",
+        "claim": "Virtual coffee chats, occasional in-person retreats and team rituals help combat isolation; remote doesn't mean isolated, it just needs intention.",
         "speaker": "Mark Rivera",
         "timestamp": "04:10",
         "type": "opinion",
@@ -233,8 +213,8 @@
         "reasoning": "Opinion, not a factual claim."
       },
       {
-        "id": "c11",
-        "claim": "Remote-first companies will dominate talent acquisition in 2025 and beyond.",
+        "id": "c10",
+        "claim": "Remote-first companies will dominate talent acquisition.",
         "speaker": "Mark Rivera",
         "timestamp": "05:00",
         "type": "prediction",
@@ -244,7 +224,7 @@
         "reasoning": "Prediction about the future; it can't be checked yet."
       },
       {
-        "id": "c12",
+        "id": "c11",
         "claim": "Local offices might become optional hubs.",
         "speaker": "Mark Rivera",
         "timestamp": "05:00",
@@ -255,7 +235,7 @@
         "reasoning": "Prediction about the future; it can't be checked yet."
       },
       {
-        "id": "c13",
+        "id": "c12",
         "claim": "Async culture will become standard practice.",
         "speaker": "Mark Rivera",
         "timestamp": "05:00",
@@ -266,8 +246,8 @@
         "reasoning": "Prediction about the future; it can't be checked yet."
       },
       {
-        "id": "c14",
-        "claim": "Teams moving to remote work should focus on documentation, clear goals, culture investment, and trust.",
+        "id": "c13",
+        "claim": "Documentation, clear goals, investment in culture and trust are the foundation for teams transitioning to remote work.",
         "speaker": "Mark Rivera",
         "timestamp": "05:35",
         "type": "opinion",
@@ -283,13 +263,13 @@
     "model": "claude-opus-5-5",
     "tokens": {
       "input": 16,
-      "output": 5574,
-      "cache_read": 17852,
-      "cache_write": 24097
+      "output": 5461,
+      "cache_read": 18036,
+      "cache_write": 22141
     },
-    "cost_usd": 0,
-    "duration_ms": 44757,
-    "trace_id": "26808b0e09b8c7f3",
+    "cost_usd": 0.22359620000000002,
+    "duration_ms": 44250,
+    "trace_id": "feb167ff61f6d98d",
     "warnings": []
   }
 }
