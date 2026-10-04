@@ -3,9 +3,5 @@
 region      = "us-west-2"
 alert_email = "you@example.com"
 
-# bedrock: workers call Claude on Bedrock with their IAM role (needs model access in this region).
-# api_key: workers use an Anthropic API key from Secrets Manager.
-llm_auth = "bedrock"
-
 # arm64 (t4g.medium) is cheaper and matches an image built on Apple Silicon.
 node_arch = "arm64"

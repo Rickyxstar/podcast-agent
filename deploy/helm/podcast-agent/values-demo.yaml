@@ -9,9 +9,17 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 5
 
-# Create the key's Secret before `make deploy`:
+# Create both keys' Secrets before `make deploy`:
+#   kubectl create namespace podcast-agent
+#   kubectl -n podcast-agent create secret generic anthropic-api-key \
+#     --from-literal=ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY"
 #   kubectl -n podcast-agent create secret generic brave-api-key \
 #     --from-literal=BRAVE_API_KEY="$BRAVE_API_KEY"
+llm:
+  provider: anthropic
+  apiKeySecret:
+    name: anthropic-api-key
+
 search:
   provider: brave
   apiKeySecret:

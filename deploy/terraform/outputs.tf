@@ -35,10 +35,6 @@ output "k8s_service_account" {
   value = var.k8s_service_account
 }
 
-output "anthropic_secret_arn" {
-  description = "Set its value with `aws secretsmanager put-secret-value`. Null unless llm_auth is api_key."
-  value       = one(aws_secretsmanager_secret.anthropic[*].arn)
-}
 
 # Environment for the worker container, ready to paste into Helm values.
 output "worker_env" {
@@ -47,7 +43,7 @@ output "worker_env" {
     S3_BUCKET       = aws_s3_bucket.data.bucket
     SQS_QUEUE_URL   = aws_sqs_queue.jobs.url
     AWS_REGION      = var.region
-    LLM_PROVIDER    = var.llm_auth == "bedrock" ? "bedrock" : "anthropic"
-    SEARCH_PROVIDER = "kb"
+    LLM_PROVIDER    = "anthropic"
+    SEARCH_PROVIDER = "brave"
   }
 }

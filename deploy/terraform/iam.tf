@@ -56,45 +56,6 @@ data "aws_iam_policy_document" "worker" {
     ]
     resources = [aws_sqs_queue.jobs.arn]
   }
-
-  dynamic "statement" {
-    for_each = var.llm_auth == "bedrock" ? [1] : []
-    content {
-      sid = "InvokeClaude"
-      actions = [
-        "bedrock:InvokeModel",
-        "bedrock:InvokeModelWithResponseStream",
-      ]
-      # Cross-region inference profiles route to foundation models in other
-      # regions, so the model ARN's region is a wildcard.
-      resources = [
-        "arn:aws:bedrock:*::foundation-model/anthropic.*",
-        "arn:aws:bedrock:*:${data.aws_caller_identity.current.account_id}:inference-profile/*",
-      ]
-    }
-  }
-
-  # The worker calls Claude through Bedrock's Mantle endpoint (the Messages
-  # API), which authorizes against a Mantle project, not the model ARN.
-  dynamic "statement" {
-    for_each = var.llm_auth == "bedrock" ? [1] : []
-    content {
-      sid     = "InvokeClaudeMantle"
-      actions = ["bedrock-mantle:CreateInference"]
-      resources = [
-        "arn:aws:bedrock-mantle:${var.region}:${data.aws_caller_identity.current.account_id}:project/*",
-      ]
-    }
-  }
-
-  dynamic "statement" {
-    for_each = var.llm_auth == "api_key" ? [1] : []
-    content {
-      sid       = "ReadAnthropicKey"
-      actions   = ["secretsmanager:GetSecretValue"]
-      resources = [aws_secretsmanager_secret.anthropic[0].arn]
-    }
-  }
 }
 
 resource "aws_iam_role_policy" "worker" {

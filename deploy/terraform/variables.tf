@@ -5,7 +5,7 @@ variable "name" {
 }
 
 variable "region" {
-  description = "AWS region. Pick one where Bedrock serves Claude if llm_auth is bedrock."
+  description = "AWS region."
   type        = string
   default     = "us-west-2"
 }
@@ -65,17 +65,6 @@ variable "k8s_service_account" {
   description = "Worker service account name; the Pod Identity association binds the worker role to it."
   type        = string
   default     = "podcast-agent"
-}
-
-variable "llm_auth" {
-  description = "How workers reach the LLM: bedrock (IAM via Pod Identity, no secret) or api_key (Anthropic key in Secrets Manager)."
-  type        = string
-  default     = "bedrock"
-
-  validation {
-    condition     = contains(["bedrock", "api_key"], var.llm_auth)
-    error_message = "llm_auth must be bedrock or api_key."
-  }
 }
 
 variable "sqs_visibility_timeout_seconds" {
