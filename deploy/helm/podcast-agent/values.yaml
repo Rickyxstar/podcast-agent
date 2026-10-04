@@ -64,8 +64,9 @@ autoscaling:
   # LLM rate limits, not the cluster, are the real ceiling.
   maxReplicas: 5
   # Target messages per pod. KEDA counts in-flight messages too, so pods
-  # with a running job are not scaled away.
-  queueLength: 1
+  # with a running job are not scaled away. Keep it equal to the worker's
+  # WORKER_CONCURRENCY (2 by default).
+  queueLength: 2
   pollingInterval: 15
   cooldownPeriod: 300
 
