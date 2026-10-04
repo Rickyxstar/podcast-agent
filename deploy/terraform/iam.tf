@@ -74,6 +74,19 @@ data "aws_iam_policy_document" "worker" {
     }
   }
 
+  # The worker calls Claude through Bedrock's Mantle endpoint (the Messages
+  # API), which authorizes against a Mantle project, not the model ARN.
+  dynamic "statement" {
+    for_each = var.llm_auth == "bedrock" ? [1] : []
+    content {
+      sid     = "InvokeClaudeMantle"
+      actions = ["bedrock-mantle:CreateInference"]
+      resources = [
+        "arn:aws:bedrock-mantle:${var.region}:${data.aws_caller_identity.current.account_id}:project/*",
+      ]
+    }
+  }
+
   dynamic "statement" {
     for_each = var.llm_auth == "api_key" ? [1] : []
     content {
