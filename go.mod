@@ -7,6 +7,7 @@ require (
 	github.com/aws/aws-sdk-go-v2 v1.47.1
 	github.com/aws/aws-sdk-go-v2/config v1.33.6
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.114.0
+	github.com/aws/aws-sdk-go-v2/service/sqs v1.52.1
 	github.com/openai/openai-go/v3 v3.71.1
 	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.12.1

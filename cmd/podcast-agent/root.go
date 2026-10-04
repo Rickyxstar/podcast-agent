@@ -4,6 +4,7 @@ import (
 	"context"
 	"log/slog"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -61,7 +62,7 @@ func newRootCmd() *cobra.Command {
 	f.StringVar(&cfg.Storage.Bucket, "bucket", os.Getenv("S3_BUCKET"), "S3 bucket [S3_BUCKET]")
 	f.StringVar(&cfg.Storage.S3Endpoint, "s3-endpoint", os.Getenv("AWS_ENDPOINT_URL"), "S3 endpoint override, e.g. LocalStack [AWS_ENDPOINT_URL]")
 
-	f.StringVar(&cfg.LLM.AWSRegion, "aws-region", os.Getenv("AWS_REGION"), "AWS region for Bedrock and S3 [AWS_REGION]")
+	f.StringVar(&cfg.LLM.AWSRegion, "aws-region", os.Getenv("AWS_REGION"), "AWS region for Bedrock, S3 and SQS [AWS_REGION]")
 
 	f.DurationVar(&cfg.Timeout, "timeout", envDuration("TIMEOUT", 10*time.Minute), "per-episode timeout [TIMEOUT]")
 	f.BoolVar(&cfg.Debug, "debug", os.Getenv("DEBUG") != "", "enable debug logging [DEBUG]")
@@ -99,6 +100,13 @@ func (c *config) build(ctx context.Context) (*deps, error) {
 func envOr(key, def string) string {
 	if v := os.Getenv(key); v != "" {
 		return v
+	}
+	return def
+}
+
+func envInt(key string, def int) int {
+	if n, err := strconv.Atoi(os.Getenv(key)); err == nil {
+		return n
 	}
 	return def
 }

@@ -45,12 +45,7 @@ func newRunCmd(cfg *config) *cobra.Command {
 				"storage", d.storage.Name(),
 			)
 
-			model := llmfactory.Model(cfg.LLM)
-			price, ok := agent.PriceFor(model)
-			if !ok {
-				slog.Info("no price for model; report cost will be 0", "model", model)
-			}
-			acfg := agent.Config{Price: price}
+			acfg := cfg.agentConfig()
 			rec := &trace.Recorder{}
 			var sink trace.Sink = rec
 			if pretty {
@@ -77,6 +72,16 @@ func newRunCmd(cfg *config) *cobra.Command {
 
 	cmd.Flags().BoolVar(&pretty, "pretty", false, "print the Markdown report to stdout and a readable agent trace to stderr")
 	return cmd
+}
+
+// agentConfig returns the agent.Config shared by every subcommand.
+func (c *config) agentConfig() agent.Config {
+	model := llmfactory.Model(c.LLM)
+	price, ok := agent.PriceFor(model)
+	if !ok {
+		slog.Info("no price for model; report cost will be 0", "model", model)
+	}
+	return agent.Config{Price: price}
 }
 
 func parseFile(name string) (*transcript.Episode, error) {
