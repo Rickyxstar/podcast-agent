@@ -188,9 +188,9 @@ func TestRun(t *testing.T) {
 	if c1.ID != "c1" || c1.Verdict != report.VerdictVerified {
 		t.Errorf("c1 = %s %s, want c1 verified", c1.ID, c1.Verdict)
 	}
-	// 0.35·1.0 (kb) + 0.30·1 (agrees) + 0.20·1.0 (under a year old) + 0.15·0.8
-	if c1.Confidence != 0.97 {
-		t.Errorf("c1 confidence = %v, want 0.97", c1.Confidence)
+	// 0.8·1.0 (kb) + 0.2·0.8
+	if c1.Confidence != 0.96 {
+		t.Errorf("c1 confidence = %v, want 0.96", c1.Confidence)
 	}
 	if len(c1.Evidence) != 1 || c1.Evidence[0].Source != "kb:gitlab-all-remote" || c1.Evidence[0].Date != "2026-01-01" {
 		t.Errorf("c1 evidence = %+v", c1.Evidence)

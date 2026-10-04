@@ -2,24 +2,13 @@ package agent
 
 import (
 	"testing"
-	"time"
 
 	"github.com/Rickyxstar/podcast-agent/internal/report"
 	"github.com/Rickyxstar/podcast-agent/internal/search"
 )
 
-var confidenceNow = time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC)
-
-// published returns a pointer to the time age before confidenceNow.
-func published(age time.Duration) *time.Time {
-	t := confidenceNow.Add(-age)
-	return &t
-}
-
-const year = 365 * 24 * time.Hour
-
-func evidence(kind search.Kind, pub *time.Time, s stance) scoredEvidence {
-	return scoredEvidence{result: search.Result{Kind: kind, Published: pub}, stance: s}
+func evidence(kind search.Kind, s stance) scoredEvidence {
+	return scoredEvidence{result: search.Result{Kind: kind}, stance: s}
 }
 
 func TestConfidence(t *testing.T) {
@@ -37,66 +26,77 @@ func TestConfidence(t *testing.T) {
 			want:    noEvidenceConfidence,
 		},
 		{
-			// 0.35·1 + 0.30·1 + 0.20·1 + 0.15·0.8
-			name:    "recent kb supports verified",
+			// 0.8·1 + 0.2·0.8
+			name:    "kb supports verified",
 			verdict: report.VerdictVerified,
-			ev:      []scoredEvidence{evidence(search.KindKB, published(30*24*time.Hour), stanceSupports)},
+			ev:      []scoredEvidence{evidence(search.KindKB, stanceSupports)},
 			self:    0.8,
-			want:    0.97,
+			want:    0.96,
 		},
 		{
-			// 0.35·0.4 + 0.30·0 + 0.20·0.5 + 0.15·0.6
-			name:    "undated web contradicts verified",
-			verdict: report.VerdictVerified,
-			ev:      []scoredEvidence{evidence(search.KindWeb, nil, stanceContradicts)},
-			self:    0.6,
-			want:    0.33,
-		},
-		{
-			// 0.35·0.4 + 0.30·1 + 0.20·0.7 + 0.15·1
+			// 0.8·0.6 + 0.2·1
 			name:    "contradicting web backs outdated",
 			verdict: report.VerdictOutdatedOrInaccurate,
-			ev:      []scoredEvidence{evidence(search.KindWeb, published(2*year), stanceContradicts)},
+			ev:      []scoredEvidence{evidence(search.KindWeb, stanceContradicts)},
 			self:    1,
-			want:    0.73,
+			want:    0.68,
 		},
 		{
-			// 0.35·1 + 0.30·1 + 0.20·0.4 + 0.15·0.4
+			// 0.8·1 + 0.2·0.4
 			name:    "neutral kb backs unverifiable",
 			verdict: report.VerdictUnverifiable,
-			ev:      []scoredEvidence{evidence(search.KindKB, published(5*year), stanceNeutral)},
+			ev:      []scoredEvidence{evidence(search.KindKB, stanceNeutral)},
 			self:    0.4,
-			want:    0.79,
+			want:    0.88,
 		},
 		{
-			// 0.35·1 + 0.30·0.5 + 0.20·0.75 + 0.15·0.8
-			name:    "mixed evidence averages",
+			// The best source counts, so adding a web result to a KB result
+			// doesn't lower confidence.
+			name:    "web alongside kb takes the best source",
 			verdict: report.VerdictVerified,
 			ev: []scoredEvidence{
-				evidence(search.KindKB, published(30*24*time.Hour), stanceSupports),
-				evidence(search.KindKB, nil, stanceContradicts),
+				evidence(search.KindKB, stanceSupports),
+				evidence(search.KindWeb, stanceSupports),
 			},
 			self: 0.8,
-			want: 0.77,
+			want: 0.96,
+		},
+		{
+			name:    "mixed evidence caps",
+			verdict: report.VerdictVerified,
+			ev: []scoredEvidence{
+				evidence(search.KindKB, stanceSupports),
+				evidence(search.KindKB, stanceContradicts),
+			},
+			self: 0.8,
+			want: mixedEvidenceConfidence,
+		},
+		{
+			// 0.8·0.6 + 0.2·0, already under the cap
+			name:    "mixed evidence below the cap is unchanged",
+			verdict: report.VerdictVerified,
+			ev:      []scoredEvidence{evidence(search.KindWeb, stanceContradicts)},
+			self:    0,
+			want:    0.48,
 		},
 		{
 			name:    "self rating above 1 clamps",
 			verdict: report.VerdictVerified,
-			ev:      []scoredEvidence{evidence(search.KindKB, published(0), stanceSupports)},
+			ev:      []scoredEvidence{evidence(search.KindKB, stanceSupports)},
 			self:    1.5,
 			want:    1,
 		},
 		{
 			name:    "self rating below 0 clamps",
 			verdict: report.VerdictVerified,
-			ev:      []scoredEvidence{evidence(search.KindKB, published(0), stanceSupports)},
+			ev:      []scoredEvidence{evidence(search.KindKB, stanceSupports)},
 			self:    -1,
-			want:    0.85,
+			want:    0.8,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := confidence(tt.verdict, tt.ev, tt.self, confidenceNow); got != tt.want {
+			if got := confidence(tt.verdict, tt.ev, tt.self); got != tt.want {
 				t.Errorf("confidence = %v, want %v", got, tt.want)
 			}
 		})
@@ -106,32 +106,11 @@ func TestConfidence(t *testing.T) {
 func TestSourceQuality(t *testing.T) {
 	for kind, want := range map[search.Kind]float64{
 		search.KindKB:  1.0,
-		search.KindWeb: 0.4,
-		"":             0.4,
+		search.KindWeb: 0.6,
+		"":             0.6,
 	} {
 		if got := sourceQuality(search.Result{Kind: kind}); got != want {
 			t.Errorf("sourceQuality(%q) = %v, want %v", kind, got, want)
-		}
-	}
-}
-
-func TestRecency(t *testing.T) {
-	tests := []struct {
-		name string
-		pub  *time.Time
-		want float64
-	}{
-		{"undated", nil, 0.5},
-		{"today", published(0), 1.0},
-		{"just under a year", published(year - time.Second), 1.0},
-		{"one year", published(year), 0.7},
-		{"just under three years", published(3*year - time.Second), 0.7},
-		{"three years", published(3 * year), 0.4},
-		{"ten years", published(10 * year), 0.4},
-	}
-	for _, tt := range tests {
-		if got := recency(search.Result{Published: tt.pub}, confidenceNow); got != tt.want {
-			t.Errorf("recency(%s) = %v, want %v", tt.name, got, tt.want)
 		}
 	}
 }

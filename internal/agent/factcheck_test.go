@@ -399,7 +399,7 @@ func TestSubmitVerdict(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			_, err = st.submit(in, testNow)
+			_, err = st.submit(in)
 			if tt.wantErr == "" {
 				if err != nil {
 					t.Fatalf("submit: %v", err)
@@ -427,13 +427,13 @@ func TestSubmitVerdict(t *testing.T) {
 			Evidence:   []evidenceInput{{ResultID: webResult.ID, Stance: stanceContradicts}},
 			Reasoning:  "GitLab has an office now.",
 			SelfRating: 1,
-		}, testNow)
+		})
 		if err != nil {
 			t.Fatal(err)
 		}
-		// 0.35·0.4 (web) + 0.30·1 (agrees) + 0.20·0.7 (two years old) + 0.15·1
-		if c.Verdict != report.VerdictOutdatedOrInaccurate || c.Confidence != 0.73 || c.Reasoning != "GitLab has an office now." {
-			t.Errorf("claim = %s %v %q, want outdated_or_inaccurate 0.73", c.Verdict, c.Confidence, c.Reasoning)
+		// 0.8·0.6 (web) + 0.2·1
+		if c.Verdict != report.VerdictOutdatedOrInaccurate || c.Confidence != 0.68 || c.Reasoning != "GitLab has an office now." {
+			t.Errorf("claim = %s %v %q, want outdated_or_inaccurate 0.68", c.Verdict, c.Confidence, c.Reasoning)
 		}
 		want := report.Evidence{Source: "example.com", Snippet: webResult.Snippet, URL: webResult.URL, Date: published.Format(time.DateOnly)}
 		if len(c.Evidence) != 1 || c.Evidence[0] != want {

@@ -129,7 +129,7 @@ var errNoEvidence = errors.New("a verified or outdated_or_inaccurate verdict nee
 
 // submit records a verdict. Errors go back to the model so it can fix the
 // call, e.g. by citing a result ID it was actually shown.
-func (st *factCheckState) submit(in verdictInput, now time.Time) (report.Claim, error) {
+func (st *factCheckState) submit(in verdictInput) (report.Claim, error) {
 	st.mu.Lock()
 	defer st.mu.Unlock()
 
@@ -165,7 +165,7 @@ func (st *factCheckState) submit(in verdictInput, now time.Time) (report.Claim, 
 	tc.claim.Verdict = in.Verdict
 	tc.claim.Evidence = evidence
 	tc.claim.Reasoning = in.Reasoning
-	tc.claim.Confidence = confidence(in.Verdict, scored, in.SelfRating, now)
+	tc.claim.Confidence = confidence(in.Verdict, scored, in.SelfRating)
 	tc.decided = true
 	return tc.claim, nil
 }

@@ -141,7 +141,7 @@ func (j *job) factCheckTools(st *factCheckState) toolset {
 			if err != nil {
 				return "", err
 			}
-			c, err := st.submit(in, j.cfg.Now())
+			c, err := st.submit(in)
 			if err != nil {
 				return "", err
 			}
