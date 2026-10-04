@@ -97,6 +97,7 @@ func (j *job) check(n *notes) checked {
 		}
 	}
 	have := len(c.notes.Quotes)
+	// How many replacement quotes to ask the model for
 	c.missing = max(min(len(c.failed), maxQuotes-have), minQuotes-have)
 
 	c.notes.Topics = tidyTopics(n.Topics)

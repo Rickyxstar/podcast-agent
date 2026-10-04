@@ -34,10 +34,13 @@ func (j *job) ingest(ctx context.Context) {
 		if s.Timestamp == "" || s.Speaker == "" {
 			j.warnf("segment %d: missing timestamp or speaker", i+1)
 		}
+		// [01:20] Mark
 		fmt.Fprintf(&b, "[%s] %s", s.Timestamp, s.Speaker)
 		if s.Section != "" {
+			// [Deep Dive]
 			fmt.Fprintf(&b, " [%s]", s.Section)
 		}
+		//: Companies like GitLab...
 		fmt.Fprintf(&b, ": %s\n", s.Text)
 	}
 	j.lines = b.String()

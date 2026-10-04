@@ -248,7 +248,13 @@ Search results carry a kind: "kb" is a curated knowledge base and is trusted; "w
 
 const planPrompt = `List every claim in the transcript that a listener might repeat as fact, with the speaker and timestamp of the line it comes from. Classify each one, and for factual claims say briefly how you would check it (what to search for, and where).`
 
-// verifyPrompt asks the model to check the open claims.
+// verifyPrompt asks the model to check the open claims. For example:
+//
+//	Check each of these factual claims. Search for evidence, then call submit_verdict once per claim. You may call several tools at once.
+//
+//	- c1 (Host, 00:02:14): NASA recently announced a new Mars mission.
+//	  Plan: Search the knowledge base for NASA Mars mission announcements, then the web for the launch date.
+//	- c2 (Guest, 00:02:18): The mission launches in early 2026.
 func verifyPrompt(open []trackedClaim) string {
 	var b strings.Builder
 	b.WriteString("Check each of these factual claims. Search for evidence, then call submit_verdict once per claim. You may call several tools at once.\n\n")

@@ -84,6 +84,8 @@ func parseFile(name string) (*transcript.Episode, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// run command can only be used with local storage
 	f, err := os.Open(name)
 	if err != nil {
 		return nil, err

@@ -69,7 +69,21 @@ func (c *checked) repairFields() []string {
 	return fields
 }
 
-// repairPrompt describes the problems in c and asks for fields.
+// repairPrompt describes the problems in c and asks for fields. For example:
+//
+//	Some of your output failed validation. Fix the problems below.
+//
+//	Quotes must be copied verbatim from a single transcript line.
+//	- "Remote work is here to stay." was not found in the transcript. The closest line is [01:45] Mark: "Remote work isn't going anywhere, but it is changing."
+//	- "Trust is the new office." repeats another quote.
+//	These quotes passed and are kept, so don't repeat them:
+//	- "Trust is the new office."
+//	Return 2 new quotes in "quotes". Copy a line exactly, or choose a different line.
+//
+//	Other problems:
+//	- got 4 takeaways, want 5.
+//
+//	Return only takeaways, quotes. Everything else is kept from your first answer.
 func (c *checked) repairPrompt(fields []string) string {
 	var b strings.Builder
 	b.WriteString("Some of your output failed validation. Fix the problems below.\n")
