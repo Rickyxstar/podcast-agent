@@ -13,6 +13,7 @@ import (
 	"github.com/Rickyxstar/podcast-agent/internal/llm/anthropic"
 	"github.com/Rickyxstar/podcast-agent/internal/llm/bedrock"
 	"github.com/Rickyxstar/podcast-agent/internal/llm/ollama"
+	"github.com/Rickyxstar/podcast-agent/internal/llm/openai"
 )
 
 // TestNew builds each provider against a fake server and checks which
@@ -33,6 +34,8 @@ func TestNew(t *testing.T) {
 	t.Setenv("ANTHROPIC_BASE_URL", srv.URL)
 	t.Setenv("AWS_BEARER_TOKEN_BEDROCK", "test-key")
 	t.Setenv("ANTHROPIC_BEDROCK_MANTLE_BASE_URL", srv.URL)
+	t.Setenv("OPENAI_API_KEY", "test-key")
+	t.Setenv("OPENAI_BASE_URL", srv.URL)
 
 	tests := []struct {
 		cfg       Config
@@ -47,6 +50,8 @@ func TestNew(t *testing.T) {
 		{Config{Provider: " Bedrock ", Model: "anthropic.claude-opus-5", AWSRegion: "us-east-1"}, "bedrock", "anthropic.claude-opus-5"},
 		{Config{Provider: "ollama", OllamaHost: srv.URL}, "ollama", ollama.DefaultModel},
 		{Config{Provider: "OLLAMA", Model: "llama3.1:8b", OllamaHost: srv.URL}, "ollama", "llama3.1:8b"},
+		{Config{Provider: "openai"}, "openai", openai.DefaultModel},
+		{Config{Provider: "OpenAI", Model: "gpt-5.6-terra"}, "openai", "gpt-5.6-terra"},
 	}
 	for _, tt := range tests {
 		p, err := New(context.Background(), tt.cfg)
@@ -66,7 +71,7 @@ func TestNew(t *testing.T) {
 }
 
 func TestNewUnknown(t *testing.T) {
-	_, err := New(context.Background(), Config{Provider: "openai"})
+	_, err := New(context.Background(), Config{Provider: "mistral"})
 	if !errors.Is(err, ErrUnknownProvider) {
 		t.Errorf("err = %v, want ErrUnknownProvider", err)
 	}
@@ -81,7 +86,8 @@ func TestModel(t *testing.T) {
 		{Config{Provider: "anthropic", Model: "claude-sonnet-5-5"}, "claude-sonnet-5-5"},
 		{Config{Provider: " Bedrock "}, bedrock.DefaultModel},
 		{Config{Provider: "ollama"}, ollama.DefaultModel},
-		{Config{Provider: "openai"}, ""},
+		{Config{Provider: "openai"}, openai.DefaultModel},
+		{Config{Provider: "mistral"}, ""},
 	}
 	for _, tt := range tests {
 		if got := Model(tt.cfg); got != tt.want {

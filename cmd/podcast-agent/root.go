@@ -49,7 +49,7 @@ func newRootCmd() *cobra.Command {
 	}
 
 	f := cmd.PersistentFlags()
-	f.StringVar(&cfg.LLM.Provider, "llm", envOr("LLM_PROVIDER", llmfactory.Anthropic), "LLM provider: anthropic, bedrock or ollama [LLM_PROVIDER]")
+	f.StringVar(&cfg.LLM.Provider, "llm", envOr("LLM_PROVIDER", llmfactory.Anthropic), "LLM provider: anthropic, bedrock, ollama or openai [LLM_PROVIDER]")
 	f.StringVar(&cfg.LLM.Model, "model", os.Getenv("LLM_MODEL"), "model override in the provider's naming [LLM_MODEL]")
 	f.StringVar(&cfg.LLM.OllamaHost, "ollama-host", os.Getenv("OLLAMA_HOST"), "Ollama server URL [OLLAMA_HOST]")
 

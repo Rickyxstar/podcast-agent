@@ -12,6 +12,7 @@ import (
 	"github.com/Rickyxstar/podcast-agent/internal/llm/anthropic"
 	"github.com/Rickyxstar/podcast-agent/internal/llm/bedrock"
 	"github.com/Rickyxstar/podcast-agent/internal/llm/ollama"
+	"github.com/Rickyxstar/podcast-agent/internal/llm/openai"
 )
 
 // ErrUnknownProvider is returned by New for a provider name it doesn't know.
@@ -22,11 +23,12 @@ const (
 	Anthropic = "anthropic"
 	Bedrock   = "bedrock"
 	Ollama    = "ollama"
+	OpenAI    = "openai"
 )
 
 // Config selects and configures a provider. Credentials are not here: the
 // SDKs resolve them (ANTHROPIC_API_KEY or an `ant` profile; the AWS
-// credential chain, including EKS Pod Identity).
+// credential chain, including EKS Pod Identity; OPENAI_API_KEY).
 type Config struct {
 	// Provider is one of the names above, case-insensitive. Empty means Anthropic.
 	Provider string
@@ -52,6 +54,8 @@ func Model(cfg Config) string {
 		return bedrock.DefaultModel
 	case Ollama:
 		return ollama.DefaultModel
+	case OpenAI:
+		return openai.DefaultModel
 	default:
 		return ""
 	}
@@ -68,7 +72,9 @@ func New(ctx context.Context, cfg Config) (llm.Provider, error) {
 		return bedrock.New(ctx, bc)
 	case Ollama:
 		return ollama.New(ollama.Config{Host: cfg.OllamaHost, Model: cfg.Model}), nil
+	case OpenAI:
+		return openai.New(openai.Config{Model: cfg.Model}), nil
 	default:
-		return nil, fmt.Errorf("%q: %w (want %s, %s or %s)", cfg.Provider, ErrUnknownProvider, Anthropic, Bedrock, Ollama)
+		return nil, fmt.Errorf("%q: %w (want %s, %s, %s or %s)", cfg.Provider, ErrUnknownProvider, Anthropic, Bedrock, Ollama, OpenAI)
 	}
 }
