@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "podcast-agent.fullname" . }}
+  labels:
+    {{- include "podcast-agent.labels" . | nindent 4 }}
+data:
+  STORAGE: s3
+  S3_BUCKET: {{ required "aws.bucket is required" .Values.aws.bucket | quote }}
+  SQS_QUEUE_URL: {{ required "aws.queueURL is required" .Values.aws.queueURL | quote }}
+  AWS_REGION: {{ required "aws.region is required" .Values.aws.region | quote }}
+  LLM_PROVIDER: {{ .Values.llm.provider | quote }}
+  {{- with .Values.llm.model }}
+  LLM_MODEL: {{ . | quote }}
+  {{- end }}
+  SEARCH_PROVIDER: {{ .Values.search.provider | quote }}
+  {{- range $k, $v := .Values.config }}
+  {{ $k }}: {{ $v | quote }}
+  {{- end }}

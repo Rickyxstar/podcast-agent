@@ -1,0 +1,14 @@
+podcast-agent worker installed in namespace {{ .Release.Namespace }}.
+
+Pod Identity binds the worker's AWS role to {{ .Release.Namespace }}/{{ .Values.serviceAccount.name }};
+this must match k8s_namespace / k8s_service_account in Terraform.
+
+Smoke test:
+  aws s3 cp samples/ep001_remote_work.json s3://{{ .Values.aws.bucket }}/incoming/
+  kubectl -n {{ .Release.Namespace }} logs -f deploy/{{ include "podcast-agent.fullname" . }}
+  aws s3 ls s3://{{ .Values.aws.bucket }}/results/ep001/
+{{- if .Values.autoscaling.enabled }}
+
+Watch scaling:
+  kubectl -n {{ .Release.Namespace }} get scaledobject,hpa,pods -w
+{{- end }}

@@ -1,0 +1,22 @@
+# Live demo: keep one warm pod so the first upload starts immediately, always
+# pull the mutable "latest" tag, and search the live web with Brave.
+
+image:
+  tag: latest
+  pullPolicy: Always
+
+autoscaling:
+  minReplicas: 1
+  maxReplicas: 5
+
+# Create the key's Secret before `make deploy`:
+#   kubectl -n podcast-agent create secret generic brave-api-key \
+#     --from-literal=BRAVE_API_KEY="$BRAVE_API_KEY"
+search:
+  provider: brave
+  apiKeySecret:
+    name: brave-api-key
+
+config:
+  TIMEOUT: 10m
+  DEBUG: "1"

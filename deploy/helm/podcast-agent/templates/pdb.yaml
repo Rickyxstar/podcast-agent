@@ -1,0 +1,15 @@
+{{- if .Values.podDisruptionBudget.enabled }}
+# Node drains evict at most one worker at a time, so a drain can't abandon
+# every in-flight episode at once.
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "podcast-agent.fullname" . }}
+  labels:
+    {{- include "podcast-agent.labels" . | nindent 4 }}
+spec:
+  maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
+  selector:
+    matchLabels:
+      {{- include "podcast-agent.selectorLabels" . | nindent 6 }}
+{{- end }}

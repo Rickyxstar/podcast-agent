@@ -1,0 +1,6 @@
+apiVersion: v2
+name: podcast-agent
+description: SQS worker that summarizes and fact-checks podcast transcripts uploaded to S3, scaled by KEDA.
+type: application
+version: 0.1.0
+appVersion: "latest"

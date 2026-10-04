@@ -1,0 +1,112 @@
+# Defaults for the podcast-agent worker. The Terraform outputs in
+# deploy/terraform fill the values marked "required"; `make deploy` passes them.
+
+image:
+  # Required. terraform output -raw ecr_repository_url
+  repository: ""
+  # Defaults to the chart's appVersion.
+  tag: ""
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+serviceAccount:
+  # Must match the Pod Identity association in Terraform (k8s_namespace /
+  # k8s_service_account), or the worker gets no AWS credentials.
+  name: podcast-agent
+  annotations: {}
+
+aws:
+  # Required. terraform output -raw region
+  region: ""
+  # Required. terraform output -raw bucket
+  bucket: ""
+  # Required. terraform output -raw queue_url
+  queueURL: ""
+
+llm:
+  # bedrock uses the worker's IAM role. anthropic and openai need apiKeySecret.
+  provider: bedrock
+  # Empty uses the provider's default model.
+  model: ""
+  # An existing Secret holding the provider's API key, exposed to the worker
+  # as envName. Create it before installing, e.g.:
+  #   kubectl -n podcast-agent create secret generic anthropic-api-key \
+  #     --from-literal=ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY"
+  apiKeySecret:
+    name: ""
+    key: ANTHROPIC_API_KEY
+    envName: ANTHROPIC_API_KEY
+
+search:
+  # kb searches the bundled knowledge base. brave needs apiKeySecret.
+  provider: kb
+  # An existing Secret holding the Brave API key, e.g.:
+  #   kubectl -n podcast-agent create secret generic brave-api-key \
+  #     --from-literal=BRAVE_API_KEY="$BRAVE_API_KEY"
+  apiKeySecret:
+    name: ""
+    key: BRAVE_API_KEY
+
+# Extra non-secret environment for the worker (see `podcast-agent --help`).
+config:
+  TIMEOUT: 10m
+
+# Used only when autoscaling is disabled.
+replicaCount: 1
+
+autoscaling:
+  # Needs KEDA in the cluster; Terraform installs it.
+  enabled: true
+  # 0 scales to zero when the queue is empty; the first upload then waits for
+  # a pod to start.
+  minReplicas: 0
+  # LLM rate limits, not the cluster, are the real ceiling.
+  maxReplicas: 5
+  # Target messages per pod. KEDA counts in-flight messages too, so pods
+  # with a running job are not scaled away.
+  queueLength: 1
+  pollingInterval: 15
+  cooldownPeriod: 300
+
+# Long enough for an in-flight episode to finish after SIGTERM. Keep it at or
+# above the worker's TIMEOUT.
+terminationGracePeriodSeconds: 600
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    memory: 512Mi
+
+# The worker does not serve /healthz yet. Enable once it does.
+health:
+  enabled: false
+  port: 8080
+  path: /healthz
+
+podDisruptionBudget:
+  enabled: true
+  maxUnavailable: 1
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  runAsGroup: 65532
+  fsGroup: 65532
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop: ["ALL"]
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

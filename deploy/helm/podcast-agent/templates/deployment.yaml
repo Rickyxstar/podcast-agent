@@ -1,0 +1,109 @@
+{{- if not (has .Values.llm.provider (list "bedrock" "anthropic" "openai")) }}
+{{- fail (printf "llm.provider %q is not one of bedrock, anthropic, openai" .Values.llm.provider) }}
+{{- end }}
+{{- if and (ne .Values.llm.provider "bedrock") (not .Values.llm.apiKeySecret.name) }}
+{{- fail (printf "llm.provider %q needs llm.apiKeySecret.name" .Values.llm.provider) }}
+{{- end }}
+{{- if and (eq .Values.search.provider "brave") (not .Values.search.apiKeySecret.name) }}
+{{- fail "search.provider \"brave\" needs search.apiKeySecret.name" }}
+{{- end }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "podcast-agent.fullname" . }}
+  labels:
+    {{- include "podcast-agent.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  # With autoscaling on, KEDA owns the replica count.
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "podcast-agent.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        # Roll the pods when the config changes.
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "podcast-agent.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: worker
+          image: "{{ required "image.repository is required" .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args: ["worker"]
+          envFrom:
+            - configMapRef:
+                name: {{ include "podcast-agent.fullname" . }}
+          {{- if or .Values.llm.apiKeySecret.name .Values.search.apiKeySecret.name }}
+          env:
+            {{- with .Values.llm.apiKeySecret.name }}
+            - name: {{ $.Values.llm.apiKeySecret.envName }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ . }}
+                  key: {{ $.Values.llm.apiKeySecret.key }}
+            {{- end }}
+            {{- with .Values.search.apiKeySecret.name }}
+            - name: BRAVE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ . }}
+                  key: {{ $.Values.search.apiKeySecret.key }}
+            {{- end }}
+          {{- end }}
+          {{- if .Values.health.enabled }}
+          ports:
+            - name: health
+              containerPort: {{ .Values.health.port }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.health.path }}
+              port: health
+            periodSeconds: 20
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.health.path }}
+              port: health
+            periodSeconds: 10
+          {{- end }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            # The root filesystem is read-only; give the SDKs somewhere to write.
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

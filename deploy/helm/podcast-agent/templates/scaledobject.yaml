@@ -1,0 +1,35 @@
+{{- if .Values.autoscaling.enabled }}
+# KEDA reads queue depth as its own operator identity (Pod Identity role
+# "<name>-keda-operator" in Terraform), not the worker's.
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: {{ include "podcast-agent.fullname" . }}
+  labels:
+    {{- include "podcast-agent.labels" . | nindent 4 }}
+spec:
+  podIdentity:
+    provider: aws
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: {{ include "podcast-agent.fullname" . }}
+  labels:
+    {{- include "podcast-agent.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    name: {{ include "podcast-agent.fullname" . }}
+  minReplicaCount: {{ .Values.autoscaling.minReplicas }}
+  maxReplicaCount: {{ .Values.autoscaling.maxReplicas }}
+  pollingInterval: {{ .Values.autoscaling.pollingInterval }}
+  cooldownPeriod: {{ .Values.autoscaling.cooldownPeriod }}
+  triggers:
+    - type: aws-sqs-queue
+      authenticationRef:
+        name: {{ include "podcast-agent.fullname" . }}
+      metadata:
+        queueURL: {{ required "aws.queueURL is required" .Values.aws.queueURL | quote }}
+        queueLength: {{ .Values.autoscaling.queueLength | quote }}
+        awsRegion: {{ required "aws.region is required" .Values.aws.region | quote }}
+{{- end }}
