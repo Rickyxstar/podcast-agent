@@ -1,0 +1,12 @@
+# Only go.mod, go.sum, cmd/, internal/, kb/ and samples/ are copied; keep the
+# build context small and free of secrets.
+.git
+.env
+.envrc
+bin/
+nogit/
+results/
+deploy/
+docs/
+**/*_test.go
+**/testdata/
