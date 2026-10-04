@@ -8,10 +8,12 @@ VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 PLATFORM ?= linux/arm64
 
 TF        := terraform -chdir=deploy/terraform
+COMPOSE   := docker compose --profile aws-local
+AWSLOCAL  := $(COMPOSE) exec -T localstack awslocal
 CHART     := deploy/helm/podcast-agent
 NAMESPACE := podcast-agent
 
-.PHONY: all build test run docker push clean deploy destroy
+.PHONY: all build test run docker push clean deploy destroy local-up local-down local-logs demo-local
 
 all: build
 
@@ -54,3 +56,28 @@ deploy:
 destroy:
 	-helm uninstall $(BINARY) --namespace $(NAMESPACE)
 	$(TF) destroy
+
+# --- LocalStack: the worker against local S3 + SQS (see docker-compose.yml) ---
+
+local-up:
+	$(COMPOSE) up -d --build --wait
+
+local-down:
+	$(COMPOSE) down -v
+
+local-logs:
+	$(COMPOSE) logs -f worker
+
+# Upload a sample to incoming/ as a client would, wait for the worker to
+# write its report, and print it. Episode IDs are the sample's name prefix.
+SAMPLE  ?= ep001_remote_work.json
+EPISODE ?= $(firstword $(subst _, ,$(SAMPLE)))
+demo-local:
+	$(AWSLOCAL) s3 cp /samples/$(SAMPLE) s3://podcasts/incoming/$(SAMPLE)
+	@echo "Waiting for results/$(EPISODE)/ (make local-logs to follow the worker)..."
+	@for i in $$(seq 120); do \
+		$(AWSLOCAL) s3api head-object --bucket podcasts --key results/$(EPISODE)/source.json >/dev/null 2>&1 && break; \
+		sleep 5; \
+	done
+	$(AWSLOCAL) s3 ls s3://podcasts/results/$(EPISODE)/
+	$(AWSLOCAL) s3 cp s3://podcasts/results/$(EPISODE)/report.md -

@@ -1,0 +1,57 @@
+# Local stand-in for the AWS deployment: LocalStack provides S3 and SQS, set
+# up by deploy/localstack/init.sh, and the worker consumes them exactly as it
+# does on EKS. The model is still real, so set ANTHROPIC_API_KEY (or another
+# provider's key) in your shell or in .env.
+#
+#   make local-up      # start LocalStack + worker
+#   make demo-local    # upload a sample and print its report
+#   make local-down    # stop and discard everything
+services:
+  localstack:
+    image: localstack/localstack:4.9
+    profiles: [aws-local]
+    ports:
+      - "127.0.0.1:4566:4566"
+    environment:
+      SERVICES: s3,sqs
+      AWS_DEFAULT_REGION: us-east-1
+      # Newer LocalStack images need a (free) account token; 4.9 doesn't.
+      LOCALSTACK_AUTH_TOKEN: ${LOCALSTACK_AUTH_TOKEN:-}
+    volumes:
+      - ./deploy/localstack/init.sh:/etc/localstack/init/ready.d/init.sh:ro
+      - ./samples:/samples:ro
+    healthcheck:
+      # Healthy only once init.sh has created the bucket and queues.
+      test: ["CMD-SHELL", "curl -sf localhost:4566/_localstack/init/ready | grep -q '\"state\": *\"SUCCESSFUL\"'"]
+      interval: 2s
+      timeout: 5s
+      retries: 60
+
+  worker:
+    build: .
+    profiles: [aws-local]
+    command: ["worker"]
+    depends_on:
+      localstack:
+        condition: service_healthy
+    restart: on-failure
+    environment:
+      STORAGE: s3
+      S3_BUCKET: podcasts
+      SQS_QUEUE_URL: http://localstack:4566/000000000000/podcast-agent-jobs
+      AWS_REGION: us-east-1
+      # Only S3 and SQS go to LocalStack; LLM calls go to the real provider.
+      AWS_ENDPOINT_URL_S3: http://localstack:4566
+      AWS_ENDPOINT_URL_SQS: http://localstack:4566
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      LLM_PROVIDER: ${LLM_PROVIDER:-anthropic}
+      LLM_MODEL: ${LLM_MODEL:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OLLAMA_HOST: ${OLLAMA_HOST:-http://host.docker.internal:11434}
+      SEARCH_PROVIDER: ${SEARCH_PROVIDER:-kb}
+      BRAVE_API_KEY: ${BRAVE_API_KEY:-}
+      WORKER_CONCURRENCY: ${WORKER_CONCURRENCY:-2}
+      TIMEOUT: ${TIMEOUT:-10m}
+      DEBUG: ${DEBUG:-}
