@@ -1,6 +1,6 @@
 # Copy to terraform.tfvars (gitignored) and edit.
 
-region      = "us-west-2"
+region      = "us-east-1"
 alert_email = "you@example.com"
 
 # arm64 (t4g.medium) is cheaper and matches an image built on Apple Silicon.

@@ -143,7 +143,7 @@ make destroy                                   # helm uninstall, then terraform 
 
 ## Cost
 
-Approximate on-demand list prices in `us-west-2`, demo-sized cluster:
+Approximate on-demand list prices in `us-east-1`, demo-sized cluster:
 
 | Item                                           | Monthly     |
 | ---------------------------------------------- | ----------- |
