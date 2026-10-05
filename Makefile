@@ -13,7 +13,7 @@ AWSLOCAL  := $(COMPOSE) exec -T localstack awslocal
 CHART     := deploy/helm/podcast-agent
 NAMESPACE := podcast-agent
 
-.PHONY: all build test run docker push clean deploy destroy local-up local-down local-logs demo-local
+.PHONY: all build test docker push clean deploy destroy local-up local-down local-logs demo-local
 
 all: build
 
@@ -22,9 +22,6 @@ build:
 
 test:
 	go test ./...
-
-run:
-	go run $(CMD)
 
 docker:
 	docker build --platform $(PLATFORM) --build-arg VERSION=$(VERSION) -t $(IMAGE):$(TAG) .
