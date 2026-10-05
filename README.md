@@ -8,24 +8,11 @@ An AI agent that turns raw podcast transcripts into publish-ready show notes for
 
 It's written in Go and calls Claude through the Anthropic API by default; OpenAI and local Ollama models are also supported, and Amazon Bedrock is wired in but can't run the current model yet ([why](#assumptions-and-limitations)). It runs from the command line or in Docker, and in production it runs as a queue worker on AWS: upload a transcript to S3 and the report appears next to it.
 
-| | |
-|---|---|
-| **Example outputs** | [`results/`](results/): `report.md`, `report.json` and the agent trace for each of the three sample episodes |
+|                         |                                                                                                                                     |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **Example outputs**     | [`results/`](results/): `report.md`, `report.json` and the agent trace for each of the three sample episodes                        |
 | **Deployment strategy** | [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md): architecture diagram plus deployment, scaling, fault tolerance, cost, security and more |
-| **Assignment** | [`docs/FDE Take Home Assignment.md`](docs/FDE%20Take%20Home%20Assignment.md) |
-
-## Contents
-
-- [Quickstart (Docker)](#quickstart-docker)
-- [How it works](#how-it-works)
-- [Reading the agent trace](#reading-the-agent-trace)
-- [Fact-check method](#fact-check-method)
-- [Output](#output)
-- [Sample results](#sample-results)
-- [Configuration](#configuration)
-- [Other ways to run it](#other-ways-to-run-it)
-- [Development](#development)
-- [Assumptions and limitations](#assumptions-and-limitations)
+| **Assignment**          | [`docs/FDE Take Home Assignment.md`](docs/FDE%20Take%20Home%20Assignment.md)                                                        |
 
 ## Quickstart (Docker)
 
@@ -62,8 +49,7 @@ Notes:
 
 - The three sample transcripts are built into the image under `samples/`. To process your own file, mount it, e.g. `-v "$PWD/my-episode.txt:/in/ep.txt:ro"` and then `run /in/ep.txt`.
 - Without `--pretty`, the report is printed as JSON and the trace goes to normal log lines.
-- **On Linux**, the container runs as uid 65532. If it can't write to `out/`, add `--user "$(id -u):$(id -g)"`.
-- Without a Brave key, set `SEARCH_PROVIDER=kb` (or drop the two Brave flags) and claims are checked against the bundled knowledge base instead of the live web.
+- Without a Brave key, set `SEARCH_PROVIDER=kb` (or drop the two Brave flags) and claims are checked against the bundled knowledge base instead of the live web. Knowlege base runs are less compelling.
 
 ## How it works
 
@@ -126,32 +112,38 @@ The loop is written directly in this repo rather than taken from an SDK's tool r
 
 The same events are saved in `trace.jsonl`, one JSON object per line, all sharing a `trace_id`:
 
-| Event | What it records |
-|---|---|
-| `ingest` | Segments parsed, episode length |
-| `claim` | Each extracted claim with its type and plan for checking it |
-| `plan` | Claim counts by type |
-| `llm_call` | Stage (`summary`, `plan`, `fact_check`, `repair`), model, stop reason, tool calls, input / output / cached tokens, latency |
-| `tool_call` / `tool_result` | Each search or verdict call and the size of its result, or the error |
-| `verdict` | Claim, verdict, confidence, evidence cited, the model's reasoning |
-| `validation` / `repair` | Quote checks, length and count checks, and what the repair call fixed |
-| `done` | Fact-check status, claim count, warnings, total cost and duration |
+| Event                       | What it records                                                                                                            |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `ingest`                    | Segments parsed, episode length                                                                                            |
+| `claim`                     | Each extracted claim with its type and plan for checking it                                                                |
+| `plan`                      | Claim counts by type                                                                                                       |
+| `llm_call`                  | Stage (`summary`, `plan`, `fact_check`, `repair`), model, stop reason, tool calls, input / output / cached tokens, latency |
+| `tool_call` / `tool_result` | Each search or verdict call and the size of its result, or the error                                                       |
+| `verdict`                   | Claim, verdict, confidence, evidence cited, the model's reasoning                                                          |
+| `validation` / `repair`     | Quote checks, length and count checks, and what the repair call fixed                                                      |
+| `done`                      | Fact-check status, claim count, warnings, total cost and duration                                                          |
 
 Example from [`results/ep001/trace.jsonl`](results/ep001/trace.jsonl):
 
 ```json
-{"event":"claim","id":"c1","type":"factual","claim":"GitLab, Automattic, and Doist have written comprehensive handbooks so employees can find answers without constant guidance.","strategy":"Check the knowledge base first for each company's documentation practices. Then confirm on primary sources: GitLab's public handbook (handbook.gitlab.com), Automattic's published remote-work guides and field guide, and Doist's public remote-work playbook…"}
+{
+  "event": "claim",
+  "id": "c1",
+  "type": "factual",
+  "claim": "GitLab, Automattic, and Doist have written comprehensive handbooks so employees can find answers without constant guidance.",
+  "strategy": "Check the knowledge base first for each company's documentation practices. Then confirm on primary sources: GitLab's public handbook (handbook.gitlab.com), Automattic's published remote-work guides and field guide, and Doist's public remote-work playbook…"
+}
 ```
 
 Add `--debug` to also log the model's summarized reasoning for each call.
 
 ## Fact-check method
 
-| Verdict | Meaning |
-|---|---|
-| ✅ `verified` | At least one source supports the claim and is still current |
+| Verdict                    | Meaning                                                                           |
+| -------------------------- | --------------------------------------------------------------------------------- |
+| ✅ `verified`              | At least one source supports the claim and is still current                       |
 | ⚠ `outdated_or_inaccurate` | The evidence contradicts the claim, or the claim was true once but isn't any more |
-| ❓ `unverifiable` | An anecdote or prediction, or not enough evidence was found |
+| ❓ `unverifiable`          | An anecdote or prediction, or not enough evidence was found                       |
 
 **Confidence is how sure we are of the verdict**, not how likely the claim is to be true. (The assignment doesn't define it; this is my assumption.) It's computed in code ([`internal/agent/confidence.go`](internal/agent/confidence.go)), not taken from the model:
 
@@ -174,23 +166,49 @@ So a claim verified from the knowledge base scores 0.8–1.0, and one verified f
 
 ```jsonc
 {
-  "episode":   { "id": "ep001", "title": "...", "host": "...", "guests": ["..."], "duration": "06:00" },
-  "summary":   "...",                                        // 200–300 words
-  "takeaways": ["...", "...", "...", "...", "..."],          // exactly 5
-  "quotes":    [{ "text": "...", "speaker": "Mark", "timestamp": "02:45" }],
-  "topics":    ["remote-work", "async-culture"],
-  "fact_check": {
-    "status": "completed",                                   // completed | partial | failed
-    "claims": [{
-      "id": "c1", "claim": "...", "speaker": "...", "timestamp": "01:20",
-      "type": "factual", "verdict": "verified", "confidence": 0.64,
-      "evidence": [{ "source": "...", "url": "...", "date": "...", "snippet": "..." }],
-      "reasoning": "..."
-    }]
+  "episode": {
+    "id": "ep001",
+    "title": "...",
+    "host": "...",
+    "guests": ["..."],
+    "duration": "06:00",
   },
-  "run": { "provider": "anthropic", "model": "claude-opus-5-5",
-           "tokens": { "input": 16, "output": 5057, "cache_read": 8785, "cache_write": 17761 },
-           "cost_usd": 0.19, "duration_ms": 41501, "trace_id": "d3ff19913d7555ae", "warnings": [] }
+  "summary": "...", // 200–300 words
+  "takeaways": ["...", "...", "...", "...", "..."], // exactly 5
+  "quotes": [{ "text": "...", "speaker": "Mark", "timestamp": "02:45" }],
+  "topics": ["remote-work", "async-culture"],
+  "fact_check": {
+    "status": "completed", // completed | partial | failed
+    "claims": [
+      {
+        "id": "c1",
+        "claim": "...",
+        "speaker": "...",
+        "timestamp": "01:20",
+        "type": "factual",
+        "verdict": "verified",
+        "confidence": 0.64,
+        "evidence": [
+          { "source": "...", "url": "...", "date": "...", "snippet": "..." },
+        ],
+        "reasoning": "...",
+      },
+    ],
+  },
+  "run": {
+    "provider": "anthropic",
+    "model": "claude-opus-5-5",
+    "tokens": {
+      "input": 16,
+      "output": 5057,
+      "cache_read": 8785,
+      "cache_write": 17761,
+    },
+    "cost_usd": 0.19,
+    "duration_ms": 41501,
+    "trace_id": "d3ff19913d7555ae",
+    "warnings": [],
+  },
 }
 ```
 
@@ -200,11 +218,11 @@ So a claim verified from the knowledge base scores 0.8–1.0, and one verified f
 
 All three provided transcripts were run with live web search (Brave). Reports and traces are committed in [`results/`](results/).
 
-| Episode | Model | Claims (factual / prediction / anecdote / opinion) | ✅ | ⚠ | ❓ | Cost | Time |
-|---|---|---|---|---|---|---|---|
-| [ep001 remote work](results/ep001/report.md) | Claude Opus 5.5 | 12 (2 / 3 / 0 / 7) | 2 | 0 | 3 | $0.19 | 42 s |
-| [ep002 AI in healthcare](results/ep002/report.md) | gpt-6.1-sol | 30 (20 / 5 / 0 / 5) | 20 | 0 | 5 | $0.29 | 3 min 45 s |
-| [ep003 bootstrapping](results/ep003/report.md) | gpt-6.1-sol | 22 (12 / 0 / 7 / 3) | 6 | 1 | 12 | $0.22 | 2 min 26 s |
+| Episode                                           | Model           | Claims (factual / prediction / anecdote / opinion) | ✅  | ⚠   | ❓  | Cost  | Time       |
+| ------------------------------------------------- | --------------- | -------------------------------------------------- | --- | --- | --- | ----- | ---------- |
+| [ep001 remote work](results/ep001/report.md)      | Claude Opus 5.5 | 12 (2 / 3 / 0 / 7)                                 | 2   | 0   | 3   | $0.19 | 42 s       |
+| [ep002 AI in healthcare](results/ep002/report.md) | gpt-6.1-sol     | 30 (20 / 5 / 0 / 5)                                | 20  | 0   | 5   | $0.29 | 3 min 45 s |
+| [ep003 bootstrapping](results/ep003/report.md)    | gpt-6.1-sol     | 22 (12 / 0 / 7 / 3)                                | 6   | 1   | 12  | $0.22 | 2 min 26 s |
 
 The ✅ / ⚠ / ❓ counts are rows in the published table, so opinions aren't included. ep002 and ep003 were run on OpenAI to show that the same agent works across providers.
 
@@ -212,47 +230,25 @@ The ✅ / ⚠ / ❓ counts are rows in the published table, so opinions aren't i
 
 Each setting can be given as a flag or an environment variable. `podcast-agent --help` lists them all.
 
-| Env var | Flag | Default | Purpose |
-|---|---|---|---|
-| `LLM_PROVIDER` | `--llm` | `anthropic` | `anthropic`, `bedrock`, `openai` or `ollama` |
-| `LLM_MODEL` | `--model` | per provider | `claude-opus-5-5`, `anthropic.claude-opus-5-5` (Bedrock), `gpt-6.1-sol`, `qwen2.5:7b` |
-| `ANTHROPIC_API_KEY` | | | Anthropic provider |
-| `OPENAI_API_KEY` | | | OpenAI provider |
-| `OLLAMA_HOST` | `--ollama-host` | `http://localhost:11434` | Ollama provider |
-| `AWS_REGION` | `--aws-region` | | Bedrock, S3 and SQS. AWS credentials come from the standard AWS credential chain. |
-| `SEARCH_PROVIDER` | `--search` | `kb` | `kb` (bundled knowledge base) or `brave` (web search) |
-| `BRAVE_API_KEY` | | | Brave search |
-| `KB_DIR` | `--kb-dir` | `kb` | Folder of knowledge-base `*.json` files |
-| `STORAGE` | `--storage` | `disk` | Where reports are written: `disk` or `s3` |
-| `OUT_DIR` | `--out` | `.` | Root folder for disk storage; reports go to `<out>/results/<episode>/` |
-| `S3_BUCKET` | `--bucket` | | Bucket for S3 storage |
-| `AWS_ENDPOINT_URL` | `--s3-endpoint` | | S3 endpoint override, e.g. LocalStack |
-| `SQS_QUEUE_URL` | `--queue-url` | | `worker` only: queue to consume |
-| `WORKER_CONCURRENCY` | `--concurrency` | `2` | `worker` only: episodes processed at once per process |
-| `TIMEOUT` | `--timeout` | `10m` | Time limit for each episode |
-| `DEBUG` | `--debug` | off | Debug logs, including the model's summarized reasoning |
-
-## Other ways to run it
-
-### Without Docker
-
-Requires Go 1.27+.
-
-```bash
-set -a; . ./.env; set +a        # or: export ANTHROPIC_API_KEY=sk-ant-... BRAVE_API_KEY=... SEARCH_PROVIDER=brave
-go run ./cmd/podcast-agent run samples/ep002_ai_healthcare.json --pretty
-# → results/ep002/{report.json,report.md,trace.jsonl}
-```
-
-### Local model (Ollama, no API key)
-
-```bash
-ollama pull qwen2.5:7b
-docker run --rm -e LLM_PROVIDER=ollama -e OLLAMA_HOST=http://host.docker.internal:11434 \
-  -v "$PWD/out:/out" podcast-agent run samples/ep001_remote_work.json --out /out --pretty
-```
-
-Everything runs on your machine, but expect lower quality. In the trace excerpt above, `qwen2.5:7b` wrote an 84-word summary (the target is 200–300), didn't fix it when asked, and labelled opinions such as "culture is more important than tools" as factual claims, then marked them ✅ at 0.98 confidence by citing loosely related knowledge-base entries. The validation step catches the length problem and records it as a warning; the misjudged claims aren't caught (see [limitations](#assumptions-and-limitations)).
+| Env var              | Flag            | Default                  | Purpose                                                                               |
+| -------------------- | --------------- | ------------------------ | ------------------------------------------------------------------------------------- |
+| `LLM_PROVIDER`       | `--llm`         | `anthropic`              | `anthropic`, `bedrock`, `openai` or `ollama`                                          |
+| `LLM_MODEL`          | `--model`       | per provider             | `claude-opus-5-5`, `anthropic.claude-opus-5-5` (Bedrock), `gpt-6.1-sol`, `qwen2.5:7b` |
+| `ANTHROPIC_API_KEY`  |                 |                          | Anthropic provider                                                                    |
+| `OPENAI_API_KEY`     |                 |                          | OpenAI provider                                                                       |
+| `OLLAMA_HOST`        | `--ollama-host` | `http://localhost:11434` | Ollama provider                                                                       |
+| `AWS_REGION`         | `--aws-region`  |                          | Bedrock, S3 and SQS. AWS credentials come from the standard AWS credential chain.     |
+| `SEARCH_PROVIDER`    | `--search`      | `kb`                     | `kb` (bundled knowledge base) or `brave` (web search)                                 |
+| `BRAVE_API_KEY`      |                 |                          | Brave search                                                                          |
+| `KB_DIR`             | `--kb-dir`      | `kb`                     | Folder of knowledge-base `*.json` files                                               |
+| `STORAGE`            | `--storage`     | `disk`                   | Where reports are written: `disk` or `s3`                                             |
+| `OUT_DIR`            | `--out`         | `.`                      | Root folder for disk storage; reports go to `<out>/results/<episode>/`                |
+| `S3_BUCKET`          | `--bucket`      |                          | Bucket for S3 storage                                                                 |
+| `AWS_ENDPOINT_URL`   | `--s3-endpoint` |                          | S3 endpoint override, e.g. LocalStack                                                 |
+| `SQS_QUEUE_URL`      | `--queue-url`   |                          | `worker` only: queue to consume                                                       |
+| `WORKER_CONCURRENCY` | `--concurrency` | `2`                      | `worker` only: episodes processed at once per process                                 |
+| `TIMEOUT`            | `--timeout`     | `10m`                    | Time limit for each episode                                                           |
+| `DEBUG`              | `--debug`       | off                      | Debug logs, including the model's summarized reasoning                                |
 
 ### Other providers
 
@@ -323,11 +319,9 @@ deploy/localstack/      LocalStack setup script
 
 ## Assumptions and limitations
 
-- **Confidence means confidence in the verdict** (see [Fact-check method](#fact-check-method)). Web results all count as 0.6 for now; grading them by domain (official site 0.9, reputable news 0.7) is a TODO, so web-only verdicts currently top out at 0.68. The formula scores *where* evidence came from, not how closely it matches the claim, so a weak model that cites a loosely related knowledge-base entry still gets a high score. A relevance check on each cited source (e.g. a second model pass) is the next fix.
+- **Confidence means confidence in the verdict** (see [Fact-check method](#fact-check-method)). Web results all count as 0.6 for now; grading them by domain (official site 0.9, reputable news 0.7) is a TODO, so web-only verdicts currently top out at 0.68. The formula scores _where_ evidence came from, not how closely it matches the claim, so a weak model that cites a loosely related knowledge-base entry still gets a high score. A relevance check on each cited source (e.g. a second model pass) is the next fix.
 - **Recording date.** The sample transcripts don't include one, so claims are judged against today's date and the prompt says the recording date is unknown. Claims about the future that have since passed can therefore show up as ⚠.
 - **Claim types depend on the model.** Claude marked most of ep001's statements as opinions; a 7B local model called them factual. Opinions are left out of the published table, so the table's size varies by model.
 - **Not built yet:** removing filler words ("um", "you know") before the text goes to the model, and mapping speaker labels to full names (`Mark` → `Mark Rivera (guest)`) in code. Large models handle both well from the raw transcript. Quotes are always checked against the raw text.
-- **No golden-answer evaluation set.** Quality is checked by validation at run time and by unit tests with scripted model responses. The next step would be a `make eval` set of expected verdicts per episode, run on every prompt change.
 - **The worker has no `/healthz` or `/metrics` endpoint yet.** The Helm chart's probes are ready but switched off.
-- **Reports are drafts.** Anything marked ⚠ or ❓ should be reviewed by a person before it's published.
 - **The AWS deployment uses the Anthropic API, not Bedrock.** Bedrock was the plan, so that transcripts would stay inside the AWS account with no API key to manage. But the summary stage relies on structured outputs and the fact-check tools are `strict`, and for Claude Opus 5.5 Bedrock rejects both (tested October 2026, on both the Mantle and `bedrock-runtime` endpoints). The worker therefore calls the Anthropic API with a key from a Kubernetes Secret. The `bedrock` provider is still in the code, so once AWS adds support, moving back only takes the worker's Bedrock IAM permission and a Helm value. [DEPLOYMENT.md](docs/DEPLOYMENT.md#deployment) lists the alternatives.
